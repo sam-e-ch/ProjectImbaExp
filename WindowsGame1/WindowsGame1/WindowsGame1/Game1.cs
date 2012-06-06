@@ -83,7 +83,7 @@ namespace WindowsGame1
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
+            // TODO: Add your drawing code here blubb
 
             base.Draw(gameTime);
         }
