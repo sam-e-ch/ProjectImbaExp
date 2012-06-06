@@ -18,6 +18,7 @@ namespace WindowsGame1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Graphics.Sprite firstSprite;
 
         public Game1()
         {
@@ -34,7 +35,7 @@ namespace WindowsGame1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            firstSprite = new Graphics.Sprite();
             base.Initialize();
         }
 
@@ -46,8 +47,9 @@ namespace WindowsGame1
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+           
             // TODO: use this.Content to load your game content here
+            firstSprite.LoadContent(this.Content, "images/shuttle");
         }
 
         /// <summary>
@@ -71,7 +73,11 @@ namespace WindowsGame1
                 this.Exit();
 
             // TODO: Add your update logic here
-
+            this.firstSprite.moveDown(1);
+            if (gameTime.TotalGameTime.Milliseconds % 5 == 0)
+            {
+                this.firstSprite.moveRight(1);
+            }
             base.Update(gameTime);
         }
 
@@ -81,10 +87,10 @@ namespace WindowsGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
-
-            // TODO: Add your drawing code here blb
-
+            graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+            firstSprite.Draw(this.spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
