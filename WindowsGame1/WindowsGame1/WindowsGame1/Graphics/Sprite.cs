@@ -14,7 +14,7 @@ namespace WindowsGame1.Graphics
     {
         private Vector2 Position = new Vector2(0, 0);
         private Texture2D spriteTexture;
-        private int Speed { get; set; }
+        public int Speed { get; set; }
 
         public void LoadContent(ContentManager theContentManager, string theAssetName)
         {

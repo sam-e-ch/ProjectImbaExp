@@ -69,10 +69,6 @@ namespace WindowsGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
             // TODO: Add your update logic here
             keyboard = Keyboard.GetState();
             Boolean left = keyboard.IsKeyDown(Keys.Left);
@@ -115,6 +111,7 @@ namespace WindowsGame1
             {
                 this.firstSprite.setPosition(0, 0);
             }
+            
             
             base.Update(gameTime);
         }
