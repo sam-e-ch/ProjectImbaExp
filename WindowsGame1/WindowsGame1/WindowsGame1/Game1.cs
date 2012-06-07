@@ -19,6 +19,7 @@ namespace WindowsGame1
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Graphics.Sprite firstSprite;
+        KeyboardState keyboard;
 
         public Game1()
         {
@@ -73,11 +74,48 @@ namespace WindowsGame1
                 this.Exit();
 
             // TODO: Add your update logic here
-            this.firstSprite.moveDown(1);
-            if (gameTime.TotalGameTime.Milliseconds % 5 == 0)
+            keyboard = Keyboard.GetState();
+            Boolean left = keyboard.IsKeyDown(Keys.Left);
+            Boolean right = keyboard.IsKeyDown(Keys.Right);
+            Boolean up =keyboard.IsKeyDown(Keys.Up);
+            Boolean down =keyboard.IsKeyDown(Keys.Down);
+            Boolean speedUp = keyboard.IsKeyDown(Keys.X);
+            Boolean speedDown = keyboard.IsKeyDown(Keys.Y);
+            Boolean reset = keyboard.IsKeyDown(Keys.Enter);
+
+
+            if (right && !left )
             {
-                this.firstSprite.moveRight(1);
+                this.firstSprite.moveRight();
             }
+            else if (left && !right)
+            {
+                this.firstSprite.moveLeft();
+            }
+
+            if (up && !down)
+            {
+                this.firstSprite.moveUp();
+            }
+            else if (down && !up)
+            {
+                this.firstSprite.moveDown();
+            }
+
+            if (speedUp && !speedDown)
+            {
+                this.firstSprite.IncreaseSpeed();
+            }
+            else if (speedDown && !speedUp)
+            {
+                this.firstSprite.DecreaseSpeed();
+            }
+
+            if (reset)
+            {
+                this.firstSprite.setPosition(0, 0);
+            }
+            
             base.Update(gameTime);
         }
 

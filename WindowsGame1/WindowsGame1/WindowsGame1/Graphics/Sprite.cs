@@ -14,11 +14,13 @@ namespace WindowsGame1.Graphics
     {
         private Vector2 Position = new Vector2(0, 0);
         private Texture2D spriteTexture;
+        private int Speed { get; set; }
 
         public void LoadContent(ContentManager theContentManager, string theAssetName)
         {
 
             spriteTexture = theContentManager.Load<Texture2D>(theAssetName);
+            Speed = 1;
 
         }
 
@@ -45,13 +47,43 @@ namespace WindowsGame1.Graphics
 
         public void moveUp(int amount)
         {
-            this.moveRight(-amount);
+            this.moveDown(-amount);
+        }
+
+        public void moveRight()
+        {
+            Position.X += Speed;
+        }
+
+        public void moveLeft()
+        {
+            Position.X -= Speed;
+        }
+
+        public void moveDown()
+        {
+            Position.Y += Speed;
+        }
+
+        public void moveUp()
+        {
+            Position.Y -= Speed;
         }
 
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(spriteTexture, Position, Color.White);
+        }
+
+        public void IncreaseSpeed()
+        {
+            this.Speed++;
+        }
+
+        public void DecreaseSpeed()
+        {
+            this.Speed--;
         }
     }
 }
