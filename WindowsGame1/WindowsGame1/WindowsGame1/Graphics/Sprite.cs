@@ -17,14 +17,13 @@ namespace WindowsGame1.Graphics
         public int Speed { get; set; }
         public float Rotation { get; set; }
         private Vector2 origin;
-        private float size;
+        public float Size { get; set; }
         private float layerDepth;
 
         public Sprite()
         {
             Speed = 1;
-            Rotation = 1f;
-            size = 0.5f;
+            Rotation = 0f;
             origin = new Vector2(0,0);            
             layerDepth = 1;
         }
@@ -32,70 +31,102 @@ namespace WindowsGame1.Graphics
         public void LoadContent(ContentManager theContentManager, string theAssetName)
         {
             spriteTexture = theContentManager.Load<Texture2D>(theAssetName);
-            origin.X = (spriteTexture.Width / 2 * size);
-            origin.Y = (spriteTexture.Height / 2 * size);
+            origin.X = (spriteTexture.Width / 2 * Size);
+            origin.Y = (0);
         }
 
-        public void setPosition(int x, int y)
+        public void SetPosition(int x, int y)
         {
             Position.X = x;
             Position.Y = y;
         }
 
-        public void moveRight(int amount)
+        public void SetPosition(Vector2 vect)
+        {
+            Position = vect;
+        }
+
+        public void MoveRight(int amount)
         {
             Position.X += amount;
         }
 
-        public void moveLeft(int amount)
+        public void MoveLeft(int amount)
         {
-            this.moveRight(-amount);
+            this.MoveRight(-amount);
         }
 
-        public void moveDown(int amount)
+        public void MoveDown(int amount)
         {
             Position.Y += amount;
         }
 
-        public void moveUp(int amount)
+        public void MoveUp(int amount)
         {
-            this.moveDown(-amount);
+            this.MoveDown(-amount);
         }
 
-        public void moveRight()
+        public void MoveRight()
         {
             Position.X += Speed;
         }
 
-        public void moveLeft()
+        public void MoveLeft()
         {
             Position.X -= Speed;
         }
 
-        public void moveDown()
+        public void MoveDown()
         {
             Position.Y += Speed;
         }
 
-        public void moveUp()
+        public void MoveUp()
         {
             Position.Y -= Speed;
         }
 
+        public void RotateRight(float amount)
+        {
+            Rotation += amount;
+        }
+
+        public void RotateLeft(float amount)
+        {
+            RotateRight(-amount);
+        }
+
+        public void MoveForward()
+        {
+            Position.X += (float)(Speed*Math.Sin(Rotation));
+            Position.Y -= (float)(Speed * Math.Cos(Rotation));
+        }
+
+        public void MoveBackward()
+        {
+            Position.X -= (float)(Speed * Math.Sin(Rotation));
+            Position.Y += (float)(Speed * Math.Cos(Rotation));
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spriteTexture, Position,null, Color.White, Rotation, origin, size, SpriteEffects.None, layerDepth);
+            spriteBatch.Draw(spriteTexture, Position,null, Color.White, Rotation, origin, Size, SpriteEffects.None, layerDepth);
         }
 
         public void IncreaseSpeed()
         {
-            this.Speed++;
+            if (Speed <= 10)
+            {
+                this.Speed++;
+            }
         }
 
         public void DecreaseSpeed()
         {
-            this.Speed--;
+            if (Speed > 0)
+            {
+                this.Speed--;
+            }
         }
     }
 }

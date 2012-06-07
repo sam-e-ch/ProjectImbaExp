@@ -20,6 +20,8 @@ namespace WindowsGame1
         SpriteBatch spriteBatch;
         Graphics.Sprite firstSprite;
         KeyboardState keyboard;
+        Vector2 centerPoint;
+        Graphics.Sprite background;
 
         public Game1()
         {
@@ -37,6 +39,8 @@ namespace WindowsGame1
         {
             // TODO: Add your initialization logic here
             firstSprite = new Graphics.Sprite();
+            background = new Graphics.Sprite();
+            centerPoint = new Vector2(this.GraphicsDevice.Viewport.Width/2, this.GraphicsDevice.Viewport.Height/2);
             base.Initialize();
         }
 
@@ -51,6 +55,10 @@ namespace WindowsGame1
            
             // TODO: use this.Content to load your game content here
             firstSprite.LoadContent(this.Content, "images/shuttle");
+            firstSprite.Size = 0.3f;
+            background.LoadContent(this.Content, "images/stars");
+            background.Size = 1f;
+            firstSprite.SetPosition(centerPoint);
         }
 
         /// <summary>
@@ -79,23 +87,25 @@ namespace WindowsGame1
             Boolean speedDown = keyboard.IsKeyDown(Keys.Y);
             Boolean reset = keyboard.IsKeyDown(Keys.Enter);
 
+            float rotateStep = 0.1f;
+
 
             if (right && !left )
             {
-                this.firstSprite.moveRight();
+                this.firstSprite.RotateRight(rotateStep);
             }
             else if (left && !right)
             {
-                this.firstSprite.moveLeft();
+                this.firstSprite.RotateLeft(rotateStep);
             }
 
             if (up && !down)
             {
-                this.firstSprite.moveUp();
+                this.firstSprite.MoveForward();
             }
             else if (down && !up)
             {
-                this.firstSprite.moveDown();
+                this.firstSprite.MoveBackward();
             }
 
             if (speedUp && !speedDown)
@@ -109,7 +119,9 @@ namespace WindowsGame1
 
             if (reset)
             {
-                this.firstSprite.setPosition(0, 0);
+                this.firstSprite.SetPosition(centerPoint);
+                this.firstSprite.Rotation = 0;
+                this.firstSprite.Speed = 1;
             }
             
             
@@ -124,6 +136,7 @@ namespace WindowsGame1
         {
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
+            background.Draw(this.spriteBatch);
             firstSprite.Draw(this.spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
