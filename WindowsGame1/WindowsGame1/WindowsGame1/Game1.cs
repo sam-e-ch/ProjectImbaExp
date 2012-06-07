@@ -57,7 +57,7 @@ namespace WindowsGame1
             firstSprite.LoadContent(this.Content, "images/shuttle");
             firstSprite.Size = 0.3f;
             background.LoadContent(this.Content, "images/stars");
-            background.Size = 1f;
+            background.Size = 2f;
             firstSprite.SetPosition(centerPoint);
         }
 

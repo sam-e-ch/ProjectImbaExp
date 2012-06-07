@@ -16,7 +16,7 @@ namespace WindowsGame1.Graphics
         private Texture2D spriteTexture;
         public int Speed { get; set; }
         public float Rotation { get; set; }
-        private Vector2 origin;
+        public Vector2 Origin;
         public float Size { get; set; }
         private float layerDepth;
 
@@ -24,15 +24,15 @@ namespace WindowsGame1.Graphics
         {
             Speed = 1;
             Rotation = 0f;
-            origin = new Vector2(0,0);            
+            Origin = new Vector2(0,0);            
             layerDepth = 1;
         }
 
         public void LoadContent(ContentManager theContentManager, string theAssetName)
         {
             spriteTexture = theContentManager.Load<Texture2D>(theAssetName);
-            origin.X = (spriteTexture.Width / 2 * Size);
-            origin.Y = (0);
+            Origin.X = (spriteTexture.Width / 2 );
+            Origin.Y = (spriteTexture.Height/2 );
         }
 
         public void SetPosition(int x, int y)
@@ -110,7 +110,7 @@ namespace WindowsGame1.Graphics
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spriteTexture, Position,null, Color.White, Rotation, origin, Size, SpriteEffects.None, layerDepth);
+            spriteBatch.Draw(spriteTexture, Position,null, Color.White, Rotation, Origin, Size, SpriteEffects.None, layerDepth);
         }
 
         public void IncreaseSpeed()
