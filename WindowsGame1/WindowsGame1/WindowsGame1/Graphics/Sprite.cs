@@ -12,27 +12,25 @@ namespace WindowsGame1.Graphics
 {
     class Sprite
     {
-        private Vector2 Position = new Vector2(0, 0);
-        private Texture2D spriteTexture;
+        protected Vector2 Position = new Vector2(0, 0);
+        protected Texture2D spriteTexture;
         public int Speed { get; set; }
         public float Rotation { get; set; }
-        public Vector2 Origin;
+        public Vector2 Origin { get; set; }
         public float Size { get; set; }
-        private float layerDepth;
+        protected float layerDepth;
 
         public Sprite()
         {
             Speed = 1;
-            Rotation = 0f;
-            Origin = new Vector2(0,0);            
+            Rotation = 0f;           
             layerDepth = 1;
+            Origin = new Vector2(0, 0);
         }
 
         public void LoadContent(ContentManager theContentManager, string theAssetName)
         {
             spriteTexture = theContentManager.Load<Texture2D>(theAssetName);
-            Origin.X = (spriteTexture.Width / 2 );
-            Origin.Y = (spriteTexture.Height/2 );
         }
 
         public void SetPosition(int x, int y)
@@ -88,7 +86,7 @@ namespace WindowsGame1.Graphics
 
         public void RotateRight(float amount)
         {
-            Rotation += amount;
+            Rotation += amount*Speed/3;
         }
 
         public void RotateLeft(float amount)

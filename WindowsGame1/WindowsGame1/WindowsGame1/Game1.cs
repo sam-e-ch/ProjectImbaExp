@@ -18,7 +18,7 @@ namespace WindowsGame1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Graphics.Sprite firstSprite;
+        Graphics.SpaceShip spaceShip;
         KeyboardState keyboard;
         Vector2 centerPoint;
         Graphics.Sprite background;
@@ -27,6 +27,10 @@ namespace WindowsGame1
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1200;
+            graphics.IsFullScreen = true;
         }
 
         /// <summary>
@@ -38,9 +42,12 @@ namespace WindowsGame1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            firstSprite = new Graphics.Sprite();
+            spaceShip = new Graphics.SpaceShip();
             background = new Graphics.Sprite();
             centerPoint = new Vector2(this.GraphicsDevice.Viewport.Width/2, this.GraphicsDevice.Viewport.Height/2);
+            
+            
+
             base.Initialize();
         }
 
@@ -54,11 +61,11 @@ namespace WindowsGame1
             spriteBatch = new SpriteBatch(GraphicsDevice);
            
             // TODO: use this.Content to load your game content here
-            firstSprite.LoadContent(this.Content, "images/shuttle");
-            firstSprite.Size = 0.3f;
+            spaceShip.LoadContent(this.Content, "images/shuttle");
+            spaceShip.Size = 0.3f;
             background.LoadContent(this.Content, "images/stars");
-            background.Size = 2f;
-            firstSprite.SetPosition(centerPoint);
+            background.Size = 2.5f;
+            spaceShip.SetPosition(centerPoint);
         }
 
         /// <summary>
@@ -86,42 +93,48 @@ namespace WindowsGame1
             Boolean speedUp = keyboard.IsKeyDown(Keys.X);
             Boolean speedDown = keyboard.IsKeyDown(Keys.Y);
             Boolean reset = keyboard.IsKeyDown(Keys.Enter);
+            Boolean finish = keyboard.IsKeyDown(Keys.Escape);
+
+            if (finish)
+            {
+                this.Exit();
+            }
 
             float rotateStep = 0.1f;
 
 
             if (right && !left )
             {
-                this.firstSprite.RotateRight(rotateStep);
+                this.spaceShip.RotateRight(rotateStep);
             }
             else if (left && !right)
             {
-                this.firstSprite.RotateLeft(rotateStep);
+                this.spaceShip.RotateLeft(rotateStep);
             }
 
             if (up && !down)
             {
-                this.firstSprite.MoveForward();
+                this.spaceShip.MoveForward();
             }
             else if (down && !up)
             {
-                this.firstSprite.MoveBackward();
+                this.spaceShip.MoveBackward();
             }
 
             if (speedUp && !speedDown)
             {
-                this.firstSprite.IncreaseSpeed();
+                this.spaceShip.IncreaseSpeed();
             }
             else if (speedDown && !speedUp)
             {
-                this.firstSprite.DecreaseSpeed();
+                this.spaceShip.DecreaseSpeed();
             }
 
             if (reset)
             {
-                this.firstSprite.SetPosition(centerPoint);
-                this.firstSprite.Rotation = 0;
-                this.firstSprite.Speed = 1;
+                this.spaceShip.SetPosition(centerPoint);
+                this.spaceShip.Rotation = 0;
+                this.spaceShip.Speed = 1;
             }
             
             
@@ -134,10 +147,10 @@ namespace WindowsGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+            graphics.GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             background.Draw(this.spriteBatch);
-            firstSprite.Draw(this.spriteBatch);
+            spaceShip.Draw(this.spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }

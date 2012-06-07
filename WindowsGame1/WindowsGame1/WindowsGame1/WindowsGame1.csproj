@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\SpaceShip.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
