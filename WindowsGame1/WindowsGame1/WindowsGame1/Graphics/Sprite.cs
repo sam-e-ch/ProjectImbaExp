@@ -6,8 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-
-
 namespace WindowsGame1.Graphics
 {
     class Sprite
@@ -26,7 +24,7 @@ namespace WindowsGame1.Graphics
             Origin = new Vector2(0, 0);
         }
 
-        public void LoadContent(ContentManager theContentManager, string theAssetName)
+        public virtual void LoadContent(ContentManager theContentManager, string theAssetName)
         {
             spriteTexture = theContentManager.Load<Texture2D>(theAssetName);
         }
@@ -47,5 +45,4 @@ namespace WindowsGame1.Graphics
             spriteBatch.Draw(spriteTexture, Position, null, Color.White, Rotation, Origin, Size, SpriteEffects.None, layerDepth);
         }
     }
-
 }

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Threading;
 using System.Threading.Tasks;
+using WindowsGame1.Graphics;
 
 namespace WindowsGame1
 {
@@ -20,16 +21,14 @@ namespace WindowsGame1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Graphics.SpaceShip spaceShip;
-        KeyboardState keyboard;
+        SpaceShip spaceShip;
+        
         Vector2 centerPoint;
-        Graphics.Sprite background;
-        int lastShot = 0;
-        List<Graphics.Laser> LaserList = new List<Graphics.Laser>();
+        Sprite background;
+       
         SpriteFont calibri;
         int fps;
-        SoundEffect laserSound;
-
+  
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -47,8 +46,7 @@ namespace WindowsGame1
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            spaceShip = new Graphics.SpaceShip();
+            spaceShip = new Graphics.SpaceShip(this);
             background = new Graphics.Sprite();
             centerPoint = new Vector2(this.GraphicsDevice.Viewport.Width / 2, this.GraphicsDevice.Viewport.Height / 2);
             SoundEffect.MasterVolume = 0.15f;
@@ -65,13 +63,12 @@ namespace WindowsGame1
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
             spaceShip.LoadContent(this.Content, "images/shuttle");
             background.LoadContent(this.Content, "images/stars");
-            background.Size = 2.5f;
-            spaceShip.SetPosition(centerPoint);
             calibri = Content.Load<SpriteFont>("calibri");
-            laserSound = Content.Load<SoundEffect>("laser_sound");
+
+            background.Size = 2.5f;
+            spaceShip.SetPosition(centerPoint);  
         }
 
         /// <summary>
@@ -90,8 +87,8 @@ namespace WindowsGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // TODO: Add your update logic here
-            keyboard = Keyboard.GetState();
+            KeyboardState keyboard = Keyboard.GetState();
+
             Boolean left = keyboard.IsKeyDown(Keys.Left);
             Boolean right = keyboard.IsKeyDown(Keys.Right);
             Boolean up = keyboard.IsKeyDown(Keys.Up);
@@ -103,74 +100,24 @@ namespace WindowsGame1
             Boolean shoot = keyboard.IsKeyDown(Keys.Space);
             Boolean fullScreenKeys = keyboard.IsKeyDown(Keys.F11);
 
-            if (fullScreenKeys)
-            {
-                graphics.ToggleFullScreen();
-            }
+            if (fullScreenKeys) graphics.ToggleFullScreen();
 
-            if (finish)
-            {
-                this.Exit();
-            }
+            if (finish) this.Exit();
 
             float rotateStep = 0.15f;
+            
+            if (right && !left) this.spaceShip.RotateRight(rotateStep);
+            if (left && !right) this.spaceShip.RotateLeft(rotateStep);
+  
 
+            if (up && !down)this.spaceShip.ThrustForward(0.1f);
+            if (reset) spaceShip.Reset(centerPoint);
 
-            if (right && !left)
-            {
-                this.spaceShip.RotateRight(rotateStep);
-            }
-            else if (left && !right)
-            {
-                this.spaceShip.RotateLeft(rotateStep);
-            }
-
-            if (up && !down)
-            {
-                this.spaceShip.ThrustForward(1.0f);
-            }
+            if (shoot) spaceShip.Shoot();
            
-            //if (speedUp && !speedDown)
-            //{
-            //    this.spaceShip.IncreaseSpeed();
-            //}
-            //else if (speedDown && !speedUp)
-            //{
-            //    this.spaceShip.DecreaseSpeed();
-            //}
-
-            if (reset)
-            {
-                this.spaceShip.SetPosition(centerPoint);
-                this.spaceShip.Rotation = 0;
-                this.spaceShip.Velocity = Vector2.Zero;
-            }
-
-            if (shoot)// && lastShot>5)
-            {
-                lastShot = -1;
-                Graphics.Laser tempLaser = new Graphics.Laser(spaceShip.Rotation-(float)(Math.PI/20), spaceShip.Position);
-                tempLaser.LoadContent(this.Content, "images/laser_blue");
-                LaserList.Add(tempLaser);
-
-                tempLaser = new Graphics.Laser(spaceShip.Rotation + (float)(Math.PI / 20), spaceShip.Position);
-                tempLaser.LoadContent(this.Content, "images/laser_green");
-                LaserList.Add(tempLaser);
-
-                tempLaser = new Graphics.Laser(spaceShip.Rotation, spaceShip.Position);
-                tempLaser.LoadContent(this.Content, "images/laser_red");
-                LaserList.Add(tempLaser);
-
-                laserSound.Play();
-            }
-
-            lastShot++;
-
-            Parallel.ForEach(LaserList, laser => laser.NextStep());
-
-            LaserList.RemoveAll(n => !n.InField(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
-
             fps = (gameTime.ElapsedGameTime.Milliseconds);
+
+            spaceShip.Update();
 
             base.Update(gameTime);
         }
@@ -184,10 +131,9 @@ namespace WindowsGame1
             graphics.GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             background.Draw(this.spriteBatch);
-            LaserList.ForEach(n => n.Draw(this.spriteBatch));
             spaceShip.Draw(this.spriteBatch);
             
-            spriteBatch.DrawString(calibri, ("Lasers: " + LaserList.Count + "\nFPS: " + fps), new Vector2(10, 10), Color.LightGreen,
+            spriteBatch.DrawString(calibri, ("Lasers: " + spaceShip.LaserCount + "\nFPS: " + fps), new Vector2(10, 10), Color.LightGreen,
        0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             spriteBatch.End();
             base.Draw(gameTime);
