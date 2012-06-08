@@ -14,7 +14,7 @@ namespace WindowsGame1.Graphics
         public SpaceShip()
             : base()
         {
-
+            Size = 1f;
         }
 
         public void LoadContent(ContentManager theContentManager, string theAssetName)

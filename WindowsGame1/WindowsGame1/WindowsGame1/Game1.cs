@@ -67,7 +67,6 @@ namespace WindowsGame1
 
             // TODO: use this.Content to load your game content here
             spaceShip.LoadContent(this.Content, "images/shuttle");
-            spaceShip.Size = 0.3f;
             background.LoadContent(this.Content, "images/stars");
             background.Size = 2.5f;
             spaceShip.SetPosition(centerPoint);
