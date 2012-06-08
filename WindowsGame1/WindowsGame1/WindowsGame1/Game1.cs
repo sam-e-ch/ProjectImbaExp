@@ -26,6 +26,8 @@ namespace WindowsGame1
         List<Graphics.Laser> LaserList = new List<Graphics.Laser>();
         SpriteFont calibri;
         int fps;
+        SoundEffect laserSound;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -47,7 +49,7 @@ namespace WindowsGame1
             spaceShip = new Graphics.SpaceShip();
             background = new Graphics.Sprite();
             centerPoint = new Vector2(this.GraphicsDevice.Viewport.Width / 2, this.GraphicsDevice.Viewport.Height / 2);
-           // testLaser = new Graphics.Laser(0, new Vector2(50,50));
+            
 
             base.Initialize();
         }
@@ -68,7 +70,7 @@ namespace WindowsGame1
             background.Size = 2.5f;
             spaceShip.SetPosition(centerPoint);
             calibri = Content.Load<SpriteFont>("calibri");
-           // testLaser.LoadContent(this.Content, "images/shuttle");
+            laserSound = Content.Load<SoundEffect>("laser_sound");
         }
 
         /// <summary>
@@ -147,7 +149,7 @@ namespace WindowsGame1
                 this.spaceShip.Speed = 1;
             }
 
-            if (shoot && lastShot>10)
+            if (shoot && lastShot>5)
             {
                 lastShot = -1;
                 Graphics.Laser tempLaser = new Graphics.Laser(spaceShip.Rotation-(float)(Math.PI/20), spaceShip.Position);
@@ -157,6 +159,8 @@ namespace WindowsGame1
                 tempLaser = new Graphics.Laser(spaceShip.Rotation + (float)(Math.PI / 20), spaceShip.Position);
                 tempLaser.LoadContent(this.Content, "images/laser");
                 LaserList.Add(tempLaser);
+
+                laserSound.Play();
             }
 
             lastShot++;
