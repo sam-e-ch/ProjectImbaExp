@@ -51,7 +51,7 @@ namespace WindowsGame1
             spaceShip = new Graphics.SpaceShip();
             background = new Graphics.Sprite();
             centerPoint = new Vector2(this.GraphicsDevice.Viewport.Width / 2, this.GraphicsDevice.Viewport.Height / 2);
-            
+            SoundEffect.MasterVolume = 0.15f;
 
             base.Initialize();
         }
