@@ -24,8 +24,8 @@ namespace WindowsGame1.Graphics
 
         public void NextStep()
         {
-            Position.X +=2*(float)(Math.Sin(Rotation));
-            Position.Y -= 2*(float)(Math.Cos(Rotation));
+            Position.X +=4*(float)(Math.Sin(Rotation));
+            Position.Y -= 4*(float)(Math.Cos(Rotation));
         }
 
         public Boolean InField(int x, int y)

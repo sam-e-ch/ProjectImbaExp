@@ -25,7 +25,6 @@ namespace WindowsGame1
         int lastShot = 0;
         List<Graphics.Laser> LaserList = new List<Graphics.Laser>();
         SpriteFont calibri;
-        Graphics.Laser testLaser;
         int fps;
         public Game1()
         {
@@ -34,7 +33,7 @@ namespace WindowsGame1
 
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
         }
 
         /// <summary>
@@ -143,13 +142,19 @@ namespace WindowsGame1
                 this.spaceShip.Speed = 1;
             }
 
-            if (shoot && (gameTime.TotalGameTime.Milliseconds - lastShot > 100))
+            if (shoot && lastShot>10)
             {
-                lastShot = gameTime.TotalGameTime.Milliseconds;
-                Graphics.Laser tempLaser = new Graphics.Laser(spaceShip.Rotation, spaceShip.Position);
+                lastShot = -1;
+                Graphics.Laser tempLaser = new Graphics.Laser(spaceShip.Rotation-(float)(Math.PI/8), spaceShip.Position);
+                tempLaser.LoadContent(this.Content, "images/laser");
+                LaserList.Add(tempLaser);
+
+                tempLaser = new Graphics.Laser(spaceShip.Rotation + (float)(Math.PI / 8), spaceShip.Position);
                 tempLaser.LoadContent(this.Content, "images/laser");
                 LaserList.Add(tempLaser);
             }
+
+            lastShot++;
 
             LaserList.ForEach(n => n.NextStep());
 
