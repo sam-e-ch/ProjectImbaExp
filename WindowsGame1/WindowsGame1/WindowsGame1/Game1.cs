@@ -102,10 +102,22 @@ namespace WindowsGame1
             Boolean finish = keyboard.IsKeyDown(Keys.Escape);
             Boolean shoot = keyboard.IsKeyDown(Keys.Space);
             Boolean fullScreenKeys = keyboard.IsKeyDown(Keys.F11);
+            Boolean volumeUp = keyboard.IsKeyDown(Keys.Add);
+            Boolean volumeDown = keyboard.IsKeyDown(Keys.Subtract);
 
             if (fullScreenKeys)
             {
                 graphics.ToggleFullScreen();
+            }
+
+            if (volumeUp && !volumeDown && SoundEffect.MasterVolume<0.9f)
+            {
+                SoundEffect.MasterVolume += 0.01f;
+            }
+
+            if (!volumeUp && volumeDown && SoundEffect.MasterVolume>0.01f)
+            {
+                SoundEffect.MasterVolume -= 0.01f;
             }
 
             if (finish)
@@ -191,7 +203,7 @@ namespace WindowsGame1
             LaserList.ForEach(n => n.Draw(this.spriteBatch));
             spaceShip.Draw(this.spriteBatch);
             
-            spriteBatch.DrawString(calibri, ("Lasers: " + LaserList.Count + "\nFPS: " + fps), new Vector2(10, 10), Color.LightGreen,
+            spriteBatch.DrawString(calibri, ("Lasers: " + LaserList.Count + "\nFPS: " + fps), new Vector2(10, 5), Color.Cyan,
        0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             spriteBatch.End();
             base.Draw(gameTime);
