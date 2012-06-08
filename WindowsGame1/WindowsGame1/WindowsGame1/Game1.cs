@@ -22,6 +22,10 @@ namespace WindowsGame1
         KeyboardState keyboard;
         Vector2 centerPoint;
         Graphics.Sprite background;
+        int lastShot = 0;
+        List<Graphics.Laser> LaserList = new List<Graphics.Laser>();
+        SpriteFont calibri;
+        Graphics.Laser testLaser;
 
         public Game1()
         {
@@ -44,9 +48,9 @@ namespace WindowsGame1
             // TODO: Add your initialization logic here
             spaceShip = new Graphics.SpaceShip();
             background = new Graphics.Sprite();
-            centerPoint = new Vector2(this.GraphicsDevice.Viewport.Width/2, this.GraphicsDevice.Viewport.Height/2);
-            
-            
+            centerPoint = new Vector2(this.GraphicsDevice.Viewport.Width / 2, this.GraphicsDevice.Viewport.Height / 2);
+            testLaser = new Graphics.Laser(0, new Vector2(50,50));
+
 
             base.Initialize();
         }
@@ -59,13 +63,15 @@ namespace WindowsGame1
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-           
+
             // TODO: use this.Content to load your game content here
             spaceShip.LoadContent(this.Content, "images/shuttle");
             spaceShip.Size = 0.3f;
             background.LoadContent(this.Content, "images/stars");
             background.Size = 2.5f;
             spaceShip.SetPosition(centerPoint);
+            calibri = Content.Load<SpriteFont>("calibri");
+            testLaser.LoadContent(this.Content, "images/laser");
         }
 
         /// <summary>
@@ -88,12 +94,13 @@ namespace WindowsGame1
             keyboard = Keyboard.GetState();
             Boolean left = keyboard.IsKeyDown(Keys.Left);
             Boolean right = keyboard.IsKeyDown(Keys.Right);
-            Boolean up =keyboard.IsKeyDown(Keys.Up);
-            Boolean down =keyboard.IsKeyDown(Keys.Down);
+            Boolean up = keyboard.IsKeyDown(Keys.Up);
+            Boolean down = keyboard.IsKeyDown(Keys.Down);
             Boolean speedUp = keyboard.IsKeyDown(Keys.X);
             Boolean speedDown = keyboard.IsKeyDown(Keys.Y);
             Boolean reset = keyboard.IsKeyDown(Keys.Enter);
             Boolean finish = keyboard.IsKeyDown(Keys.Escape);
+            Boolean shoot = keyboard.IsKeyDown(Keys.Space);
 
             if (finish)
             {
@@ -103,7 +110,7 @@ namespace WindowsGame1
             float rotateStep = 0.1f;
 
 
-            if (right && !left )
+            if (right && !left)
             {
                 this.spaceShip.RotateRight(rotateStep);
             }
@@ -136,8 +143,28 @@ namespace WindowsGame1
                 this.spaceShip.Rotation = 0;
                 this.spaceShip.Speed = 1;
             }
-            
-            
+
+            if (shoot && gameTime.TotalGameTime.Milliseconds - lastShot > 500)
+            {
+                lastShot = gameTime.TotalGameTime.Milliseconds;
+                Graphics.Laser tempLaser = new Graphics.Laser(spaceShip.Rotation, spaceShip.Position);
+                tempLaser.LoadContent(this.Content, "images/laser");
+                LaserList.Add(tempLaser);
+            }
+
+            foreach (Graphics.Laser laser in LaserList)
+            {
+                if (laser.InField(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width))
+                {
+                    laser.NextStep();
+                }
+                else
+                {
+                    LaserList.Remove(laser);
+                }
+            }
+
+
             base.Update(gameTime);
         }
 
@@ -151,6 +178,13 @@ namespace WindowsGame1
             spriteBatch.Begin();
             background.Draw(this.spriteBatch);
             spaceShip.Draw(this.spriteBatch);
+            testLaser.Draw(this.spriteBatch);
+            foreach (Graphics.Laser laser in LaserList)
+            {
+                laser.Draw(this.spriteBatch);
+                spriteBatch.DrawString(calibri, "Laser", new Vector2(10,10), Color.LightGreen,
+       0f, new Vector2(0,0), 1.0f, SpriteEffects.None, 0.5f);
+            }
             spriteBatch.End();
             base.Draw(gameTime);
         }
