@@ -153,11 +153,11 @@ namespace WindowsGame1
             {
                 lastShot = -1;
                 Graphics.Laser tempLaser = new Graphics.Laser(spaceShip.Rotation-(float)(Math.PI/20), spaceShip.Position);
-                tempLaser.LoadContent(this.Content, "images/laser");
+                tempLaser.LoadContent(this.Content, "images/laser_blue");
                 LaserList.Add(tempLaser);
 
                 tempLaser = new Graphics.Laser(spaceShip.Rotation + (float)(Math.PI / 20), spaceShip.Position);
-                tempLaser.LoadContent(this.Content, "images/laser");
+                tempLaser.LoadContent(this.Content, "images/laser_green");
                 LaserList.Add(tempLaser);
 
                 laserSound.Play();
