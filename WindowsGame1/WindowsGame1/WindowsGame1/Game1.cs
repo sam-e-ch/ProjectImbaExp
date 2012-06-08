@@ -33,7 +33,6 @@ namespace WindowsGame1
 
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
-            graphics.IsFullScreen = false;
         }
 
         /// <summary>
@@ -99,6 +98,12 @@ namespace WindowsGame1
             Boolean reset = keyboard.IsKeyDown(Keys.Enter);
             Boolean finish = keyboard.IsKeyDown(Keys.Escape);
             Boolean shoot = keyboard.IsKeyDown(Keys.Space);
+            Boolean fullScreenKeys = keyboard.IsKeyDown(Keys.F11);
+
+            if (fullScreenKeys)
+            {
+                graphics.ToggleFullScreen();
+            }
 
             if (finish)
             {
