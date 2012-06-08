@@ -162,6 +162,10 @@ namespace WindowsGame1
                 tempLaser.LoadContent(this.Content, "images/laser_green");
                 LaserList.Add(tempLaser);
 
+                tempLaser = new Graphics.Laser(spaceShip.Rotation, spaceShip.Position);
+                tempLaser.LoadContent(this.Content, "images/laser_red");
+                LaserList.Add(tempLaser);
+
                 laserSound.Play();
             }
 
