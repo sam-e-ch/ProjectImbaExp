@@ -65,7 +65,7 @@ namespace WindowsGame1.Graphics
 
         public void RotateRight(float amount)
         {
-            Rotation += amount * Speed / 3;
+            Rotation += amount;
         }
 
         public void RotateLeft(float amount)

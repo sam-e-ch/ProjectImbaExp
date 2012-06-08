@@ -105,7 +105,7 @@ namespace WindowsGame1
                 this.Exit();
             }
 
-            float rotateStep = 0.1f;
+            float rotateStep = 0.15f;
 
 
             if (right && !left)
