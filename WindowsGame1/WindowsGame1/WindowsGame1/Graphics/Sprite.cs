@@ -14,7 +14,6 @@ namespace WindowsGame1.Graphics
     {
         public Vector2 Position;
         protected Texture2D spriteTexture;
-        public int Speed { get; set; }
         public float Rotation { get; set; }
         public Vector2 Origin { get; set; }
         public float Size { get; set; }
@@ -22,7 +21,6 @@ namespace WindowsGame1.Graphics
 
         public Sprite()
         {
-            Speed = 1;
             Rotation = 0f;
             layerDepth = 1;
             Origin = new Vector2(0, 0);
@@ -44,7 +42,7 @@ namespace WindowsGame1.Graphics
             Position = vect;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(spriteTexture, Position, null, Color.White, Rotation, Origin, Size, SpriteEffects.None, layerDepth);
         }

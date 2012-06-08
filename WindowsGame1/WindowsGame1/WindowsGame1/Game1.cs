@@ -127,27 +127,23 @@ namespace WindowsGame1
 
             if (up && !down)
             {
-                this.spaceShip.MoveForward();
+                this.spaceShip.ThrustForward(1.0f);
             }
-            else if (down && !up)
-            {
-                this.spaceShip.MoveBackward();
-            }
-
-            if (speedUp && !speedDown)
-            {
-                this.spaceShip.IncreaseSpeed();
-            }
-            else if (speedDown && !speedUp)
-            {
-                this.spaceShip.DecreaseSpeed();
-            }
+           
+            //if (speedUp && !speedDown)
+            //{
+            //    this.spaceShip.IncreaseSpeed();
+            //}
+            //else if (speedDown && !speedUp)
+            //{
+            //    this.spaceShip.DecreaseSpeed();
+            //}
 
             if (reset)
             {
                 this.spaceShip.SetPosition(centerPoint);
                 this.spaceShip.Rotation = 0;
-                this.spaceShip.Speed = 1;
+                this.spaceShip.Velocity = Vector2.Zero;
             }
 
             if (shoot)// && lastShot>5)
@@ -174,7 +170,7 @@ namespace WindowsGame1
 
             LaserList.RemoveAll(n => !n.InField(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
 
-            fps = 1000/((gameTime.ElapsedGameTime.Milliseconds)>0?gameTime.ElapsedGameTime.Milliseconds:1);
+            fps = (gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
         }

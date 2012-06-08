@@ -10,6 +10,10 @@ namespace WindowsGame1.Graphics
 {
     class SpaceShip : Sprite
     {
+        public Vector2 Velocity { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 Acceleration { get; set; }
+        public double Heading { get; set; }
 
         public SpaceShip()
             : base()
@@ -23,46 +27,6 @@ namespace WindowsGame1.Graphics
             Origin = new Vector2(spriteTexture.Width / 2, spriteTexture.Height / 2);
         }
 
-        public void MoveRight(int amount)
-        {
-            Position.X += amount;
-        }
-
-        public void MoveLeft(int amount)
-        {
-            this.MoveRight(-amount);
-        }
-
-        public void MoveDown(int amount)
-        {
-            Position.Y += amount;
-        }
-
-        public void MoveUp(int amount)
-        {
-            this.MoveDown(-amount);
-        }
-
-        public void MoveRight()
-        {
-            Position.X += Speed;
-        }
-
-        public void MoveLeft()
-        {
-            Position.X -= Speed;
-        }
-
-        public void MoveDown()
-        {
-            Position.Y += Speed;
-        }
-
-        public void MoveUp()
-        {
-            Position.Y -= Speed;
-        }
-
         public void RotateRight(float amount)
         {
             Rotation += amount;
@@ -73,34 +37,20 @@ namespace WindowsGame1.Graphics
             RotateRight(-amount);
         }
 
-        public void MoveForward()
+        public void ThrustForward(float thrust)
         {
-            Position.X += (float)(Speed * Math.Sin(Rotation));
-            Position.Y -= (float)(Speed * Math.Cos(Rotation));
+            this.Acceleration = thrust * (new Vector2((float)Math.Cos(this.Heading), (float)Math.Sin(this.Heading)));
         }
 
-        public void MoveBackward()
+        public void Update()
         {
-            Position.X -= (float)(Speed * Math.Sin(Rotation));
-            Position.Y += (float)(Speed * Math.Cos(Rotation));
-        }        
-
-        public void IncreaseSpeed()
-        {
-            if (Speed <= 10)
-            {
-                this.Speed++;
-            }
+            this.Position += this.Velocity;
+            this.Velocity += this.Acceleration;
         }
 
-        public void DecreaseSpeed()
+        public override void Draw(SpriteBatch sp)
         {
-            if (Speed > 0)
-            {
-                this.Speed--;
-            }
+            sp.Draw(spriteTexture, Position, null, Color.White, (float)this.Heading, Origin, Size, SpriteEffects.None, layerDepth);
         }
     }
-
-
 }
