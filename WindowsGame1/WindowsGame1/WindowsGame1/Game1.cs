@@ -26,14 +26,14 @@ namespace WindowsGame1
         List<Graphics.Laser> LaserList = new List<Graphics.Laser>();
         SpriteFont calibri;
         Graphics.Laser testLaser;
-
+        int fps;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1200;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
             graphics.IsFullScreen = true;
         }
 
@@ -49,8 +49,7 @@ namespace WindowsGame1
             spaceShip = new Graphics.SpaceShip();
             background = new Graphics.Sprite();
             centerPoint = new Vector2(this.GraphicsDevice.Viewport.Width / 2, this.GraphicsDevice.Viewport.Height / 2);
-            testLaser = new Graphics.Laser(0, new Vector2(50,50));
-
+           // testLaser = new Graphics.Laser(0, new Vector2(50,50));
 
             base.Initialize();
         }
@@ -71,7 +70,7 @@ namespace WindowsGame1
             background.Size = 2.5f;
             spaceShip.SetPosition(centerPoint);
             calibri = Content.Load<SpriteFont>("calibri");
-            testLaser.LoadContent(this.Content, "images/laser");
+           // testLaser.LoadContent(this.Content, "images/shuttle");
         }
 
         /// <summary>
@@ -144,7 +143,7 @@ namespace WindowsGame1
                 this.spaceShip.Speed = 1;
             }
 
-            if (shoot && gameTime.TotalGameTime.Milliseconds - lastShot > 500)
+            if (shoot && (gameTime.TotalGameTime.Milliseconds - lastShot > 100))
             {
                 lastShot = gameTime.TotalGameTime.Milliseconds;
                 Graphics.Laser tempLaser = new Graphics.Laser(spaceShip.Rotation, spaceShip.Position);
@@ -152,18 +151,11 @@ namespace WindowsGame1
                 LaserList.Add(tempLaser);
             }
 
-            foreach (Graphics.Laser laser in LaserList)
-            {
-                if (laser.InField(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width))
-                {
-                    laser.NextStep();
-                }
-                else
-                {
-                    LaserList.Remove(laser);
-                }
-            }
+            LaserList.ForEach(n => n.NextStep());
 
+            LaserList.RemoveAll(n => !n.InField(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
+
+            fps = 1000/((gameTime.ElapsedGameTime.Milliseconds)>0?gameTime.ElapsedGameTime.Milliseconds:1);
 
             base.Update(gameTime);
         }
@@ -177,14 +169,11 @@ namespace WindowsGame1
             graphics.GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             background.Draw(this.spriteBatch);
+            LaserList.ForEach(n => n.Draw(this.spriteBatch));
             spaceShip.Draw(this.spriteBatch);
-            testLaser.Draw(this.spriteBatch);
-            foreach (Graphics.Laser laser in LaserList)
-            {
-                laser.Draw(this.spriteBatch);
-                spriteBatch.DrawString(calibri, "Laser", new Vector2(10,10), Color.LightGreen,
-       0f, new Vector2(0,0), 1.0f, SpriteEffects.None, 0.5f);
-            }
+            
+            spriteBatch.DrawString(calibri, ("Lasers: " + LaserList.Count + "\nFPS: " + fps), new Vector2(10, 10), Color.LightGreen,
+       0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             spriteBatch.End();
             base.Draw(gameTime);
         }

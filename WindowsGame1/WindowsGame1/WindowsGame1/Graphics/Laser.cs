@@ -19,12 +19,13 @@ namespace WindowsGame1.Graphics
         {
             base.LoadContent(theContentManager, theAssetName);
             Origin = new Vector2(spriteTexture.Width / 2, spriteTexture.Height / 2);
+            this.Size = 1.0f;
         }
 
         public void NextStep()
         {
-            Position.X +=(float)(Math.Sin(Rotation));
-            Position.Y += (float)(Math.Cos(Rotation));
+            Position.X +=2*(float)(Math.Sin(Rotation));
+            Position.Y -= 2*(float)(Math.Cos(Rotation));
         }
 
         public Boolean InField(int x, int y)
