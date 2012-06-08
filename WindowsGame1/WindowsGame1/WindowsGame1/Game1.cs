@@ -150,11 +150,11 @@ namespace WindowsGame1
             if (shoot && lastShot>10)
             {
                 lastShot = -1;
-                Graphics.Laser tempLaser = new Graphics.Laser(spaceShip.Rotation-(float)(Math.PI/8), spaceShip.Position);
+                Graphics.Laser tempLaser = new Graphics.Laser(spaceShip.Rotation-(float)(Math.PI/20), spaceShip.Position);
                 tempLaser.LoadContent(this.Content, "images/laser");
                 LaserList.Add(tempLaser);
 
-                tempLaser = new Graphics.Laser(spaceShip.Rotation + (float)(Math.PI / 8), spaceShip.Position);
+                tempLaser = new Graphics.Laser(spaceShip.Rotation + (float)(Math.PI / 20), spaceShip.Position);
                 tempLaser.LoadContent(this.Content, "images/laser");
                 LaserList.Add(tempLaser);
             }
