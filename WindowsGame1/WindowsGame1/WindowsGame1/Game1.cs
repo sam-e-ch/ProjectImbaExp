@@ -140,10 +140,18 @@ namespace WindowsGame1
             if (up && !down)
             {
                 this.spaceShip.MoveForward();
+                if (!this.spaceShip.InField(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height))
+                {
+                    this.spaceShip.MoveBackward();
+                }
             }
             else if (down && !up)
             {
                 this.spaceShip.MoveBackward();
+                if (!this.spaceShip.InField(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height))
+                {
+                    this.spaceShip.MoveForward();
+                }
             }
 
             if (speedUp && !speedDown)
@@ -186,7 +194,8 @@ namespace WindowsGame1
 
             LaserList.RemoveAll(n => !n.InField(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
 
-            fps = 1000/((gameTime.ElapsedGameTime.Milliseconds)>0?gameTime.ElapsedGameTime.Milliseconds:1);
+            fps += 1000/((gameTime.ElapsedGameTime.Milliseconds)>0?gameTime.ElapsedGameTime.Milliseconds:1);
+            fps /= 2;
 
             base.Update(gameTime);
         }

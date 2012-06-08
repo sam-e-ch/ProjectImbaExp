@@ -77,6 +77,7 @@ namespace WindowsGame1.Graphics
         {
             Position.X += (float)(Speed * Math.Sin(Rotation));
             Position.Y -= (float)(Speed * Math.Cos(Rotation));
+
         }
 
         public void MoveBackward()

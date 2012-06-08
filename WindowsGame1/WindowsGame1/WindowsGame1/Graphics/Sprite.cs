@@ -48,6 +48,11 @@ namespace WindowsGame1.Graphics
         {
             spriteBatch.Draw(spriteTexture, Position, null, Color.White, Rotation, Origin, Size, SpriteEffects.None, layerDepth);
         }
+
+        public Boolean InField(int x, int y)
+        {
+            return (Position.X >= 0 && Position.X < x && Position.Y >= 0 && Position.Y < y);
+        }
     }
 
 }

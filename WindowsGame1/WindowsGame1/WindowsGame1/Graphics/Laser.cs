@@ -27,10 +27,6 @@ namespace WindowsGame1.Graphics
             Position.X +=20*(float)(Math.Sin(Rotation));
             Position.Y -= 20*(float)(Math.Cos(Rotation));
         }
-
-        public Boolean InField(int x, int y)
-        {
-            return (Position.X >= 0 && Position.X < x && Position.Y >= 0 && Position.Y < y);
-        }
+        
     }
 }
