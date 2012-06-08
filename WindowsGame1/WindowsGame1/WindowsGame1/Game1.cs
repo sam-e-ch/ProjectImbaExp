@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace WindowsGame1
 {
@@ -149,7 +151,7 @@ namespace WindowsGame1
                 this.spaceShip.Speed = 1;
             }
 
-            if (shoot && lastShot>5)
+            if (shoot)// && lastShot>5)
             {
                 lastShot = -1;
                 Graphics.Laser tempLaser = new Graphics.Laser(spaceShip.Rotation-(float)(Math.PI/20), spaceShip.Position);
@@ -165,7 +167,7 @@ namespace WindowsGame1
 
             lastShot++;
 
-            LaserList.ForEach(n => n.NextStep());
+            Parallel.ForEach(LaserList, laser => laser.NextStep());
 
             LaserList.RemoveAll(n => !n.InField(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
 
