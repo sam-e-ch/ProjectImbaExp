@@ -35,9 +35,11 @@ namespace WindowsGame1
 
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
-            graphics.SynchronizeWithVerticalRetrace = false;
+            graphics.SynchronizeWithVerticalRetrace = true;
 
-            this.IsFixedTimeStep = false;
+            graphics.ApplyChanges();
+
+            this.IsFixedTimeStep = true;
         }
 
         /// <summary>
@@ -91,16 +93,16 @@ namespace WindowsGame1
         {
             KeyboardState keyboard = Keyboard.GetState();
 
-            Boolean left = keyboard.IsKeyDown(Keys.Left);
-            Boolean right = keyboard.IsKeyDown(Keys.Right);
-            Boolean up = keyboard.IsKeyDown(Keys.Up);
-            Boolean down = keyboard.IsKeyDown(Keys.Down);
-            Boolean speedUp = keyboard.IsKeyDown(Keys.X);
-            Boolean speedDown = keyboard.IsKeyDown(Keys.Y);
-            Boolean reset = keyboard.IsKeyDown(Keys.Enter);
-            Boolean finish = keyboard.IsKeyDown(Keys.Escape);
-            Boolean shoot = keyboard.IsKeyDown(Keys.Space);
-            Boolean fullScreenKeys = keyboard.IsKeyDown(Keys.F11);
+            bool left = keyboard.IsKeyDown(Keys.Left);
+            bool right = keyboard.IsKeyDown(Keys.Right);
+            bool up = keyboard.IsKeyDown(Keys.Up);
+            bool down = keyboard.IsKeyDown(Keys.Down);
+            bool speedUp = keyboard.IsKeyDown(Keys.X);
+            bool speedDown = keyboard.IsKeyDown(Keys.Y);
+            bool reset = keyboard.IsKeyDown(Keys.Enter);
+            bool finish = keyboard.IsKeyDown(Keys.Escape);
+            bool shoot = keyboard.IsKeyDown(Keys.Space);
+            bool fullScreenKeys = keyboard.IsKeyDown(Keys.F11);
 
             if (fullScreenKeys) graphics.ToggleFullScreen();
 
