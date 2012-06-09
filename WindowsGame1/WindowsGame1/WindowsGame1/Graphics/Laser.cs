@@ -19,7 +19,7 @@ namespace WindowsGame1.Graphics
         private Dictionary<ShotColor, Texture2D> textures;
 
         public float Heading { get; set; }
-        public int ShotRate { get; set; }
+        public int FireRate { get; set; }
         public int ShotLifeTime { get; set; }
 
         private Stopwatch watch;
@@ -28,9 +28,9 @@ namespace WindowsGame1.Graphics
         {
             this.shots = new List<LaserShot>();
             this.spaceShip = spaceShip;
-            this.textures = new Dictionary<ShotColor, Texture2D>();
+            this.textures = new Dictionary<ShotColor, Texture2D>(3);
             this.watch = new Stopwatch();
-            this.ShotRate = 20;
+            this.FireRate = 40;
             this.ShotLifeTime = 1500;
             watch.Start();
         }
@@ -55,7 +55,7 @@ namespace WindowsGame1.Graphics
 
         public void Shoot()
         {
-            if (watch.Elapsed.TotalMilliseconds >= 1000.0f / ShotRate)
+            if (watch.Elapsed.TotalMilliseconds >= 1000.0f / FireRate)
             {
                 shots.Add(new LaserShot(ShotColor.Red, Heading - MathHelper.ToRadians(10.0f), spaceShip.Position));
                 shots.Add(new LaserShot(ShotColor.Blue, Heading, spaceShip.Position));

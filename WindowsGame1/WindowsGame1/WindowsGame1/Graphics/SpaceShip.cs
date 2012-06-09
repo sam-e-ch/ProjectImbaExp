@@ -20,7 +20,7 @@ namespace WindowsGame1.Graphics
                 return _velocity;
             } 
 
-            set 
+            private set 
             {
                 if (value.Length() >= MAX_VELOCITY)
                     _velocity = _velocity / _velocity.Length() * MAX_VELOCITY;
@@ -40,7 +40,7 @@ namespace WindowsGame1.Graphics
                 return _angularVelocity;
             }
 
-            set
+            private set
             {
                 if (value >= MAX_ANGULAR_VELOCITY)
                     _angularVelocity = MAX_ANGULAR_VELOCITY;
