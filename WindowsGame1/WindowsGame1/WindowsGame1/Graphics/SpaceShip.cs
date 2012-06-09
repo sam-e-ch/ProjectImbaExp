@@ -8,9 +8,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WindowsGame1.Graphics
 {
-    class SpaceShip : Sprite
+    class SpaceShip : Sprite, ITrackable
     {
-        private float MAX_VELOCITY = 300.0f;
+        private float MAX_VELOCITY = 500.0f;
         private float MAX_ANGULAR_VELOCITY = 8.0f;
 
         private Vector2 _velocity;
@@ -138,6 +138,11 @@ namespace WindowsGame1.Graphics
         public void Shoot()
         {
             laser.Shoot();
+        }
+
+        Vector2 ITrackable.getPosition()
+        {
+            return this.Position;
         }
     }
 }

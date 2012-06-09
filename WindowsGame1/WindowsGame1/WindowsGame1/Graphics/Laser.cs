@@ -80,7 +80,7 @@ namespace WindowsGame1.Graphics
 
         private class LaserShot
         {
-            public const int SPEED = 1000;
+            public const int SPEED = 1500;
 
             public float Rotation { get; set; }
             public Vector2 Position { get; set; }
@@ -90,7 +90,6 @@ namespace WindowsGame1.Graphics
             public long LifeTime { get { return watch.ElapsedMilliseconds; } }
 
             public LaserShot(ShotColor color, float direction, Vector2 position)
-                : base()
             {
                 Rotation = direction;
                 Position = position;

@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Graphics\ITrackable.cs" />
     <Compile Include="Graphics\Laser.cs" />
     <Compile Include="Graphics\SpaceShip.cs" />
     <Compile Include="Graphics\Sprite.cs" />

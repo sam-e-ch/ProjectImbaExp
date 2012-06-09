@@ -39,12 +39,12 @@ namespace WindowsGame1
 
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
-            graphics.SynchronizeWithVerticalRetrace = true;
-
-            camera = new Camera();
-            camera.Speed = 3.0f;
+            graphics.SynchronizeWithVerticalRetrace = false;
 
             graphics.ApplyChanges();
+
+            camera = new Camera(GraphicsDevice.Viewport.Bounds);
+            camera.Speed = 3.0f;
 
             this.IsFixedTimeStep = true;
         }
@@ -109,10 +109,12 @@ namespace WindowsGame1
             Vector2 mousePos = new Vector2(mouse.X, mouse.Y);
             Vector2 mouseDelta = mousePos - oldMousePos;
 
+            oldMousePos = mousePos;
+            
             if (!trackSpaceShip)
                 camera.Move(mouseDelta);
             else
-                camera.Position = spaceShip.Position - centerPoint;
+                camera.Track(spaceShip);
 
             Keys[] keys = keyboard.GetPressedKeys();
             foreach (Keys k in keys)
@@ -120,13 +122,13 @@ namespace WindowsGame1
                 switch (k)
                 {
                     case Keys.W:
-                        this.spaceShip.ThrustForward(200.0f); break;
+                        this.spaceShip.ThrustForward(300.0f); break;
                     case Keys.A:
-                        this.spaceShip.RotateLeft(5.0f); break;
+                        this.spaceShip.RotateLeft(15.0f); break;
                     case Keys.S:
-                        this.spaceShip.ThrustBackward(200.0f); break;
+                        this.spaceShip.ThrustBackward(300.0f); break;
                     case Keys.D:
-                        this.spaceShip.RotateRight(5.0f); break;
+                        this.spaceShip.RotateRight(15.0f); break;
 
                     case Keys.Space:
                         spaceShip.Shoot(); break;
@@ -137,6 +139,8 @@ namespace WindowsGame1
                         trackSpaceShip = true; break;
                     case Keys.P:
                         trackSpaceShip = false; break;
+                    case Keys.M:
+                        Mute(); break;
 
                     case Keys.F11:
                         graphics.ToggleFullScreen(); break;
@@ -146,8 +150,7 @@ namespace WindowsGame1
             }        
            
             spaceShip.Update(gameTime.ElapsedGameTime.TotalSeconds);
-            oldMousePos = mousePos;
-
+            
             base.Update(gameTime);
         }
 
@@ -161,13 +164,21 @@ namespace WindowsGame1
 
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
+
             background.Draw(this.spriteBatch, camera);
             spaceShip.Draw(this.spriteBatch, camera);
 
             spriteBatch.DrawString(calibri, String.Format("Lasers: {0}\nDrawTime: {1:0.0} ms\nSpeed: {2:000.0}, ASpeed: {3:000.0}", spaceShip.LaserCount, dt * 1000, spaceShip.Speed, spaceShip.AngularVelocity),
                 new Vector2(10, 10), Color.LightGreen, 0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
+            
             spriteBatch.End();
+
             base.Draw(gameTime);
+        }
+
+        private void Mute()
+        {
+            SoundEffect.MasterVolume = 0;
         }
     }
 }
