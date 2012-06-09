@@ -25,8 +25,12 @@ namespace WindowsGame1
         
         Vector2 centerPoint;
         Sprite background;
+
+        Camera camera;
+        bool trackSpaceShip = false;
        
         SpriteFont calibri;
+        Vector2 oldMousePos;
   
         public Game1()
         {
@@ -36,6 +40,9 @@ namespace WindowsGame1
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.SynchronizeWithVerticalRetrace = true;
+
+            camera = new Camera();
+            camera.Speed = 100.0f;
 
             graphics.ApplyChanges();
 
@@ -51,9 +58,13 @@ namespace WindowsGame1
         protected override void Initialize()
         {
             spaceShip = new Graphics.SpaceShip(this);
-            background = new Graphics.Sprite();
+            background = new Graphics.Sprite();            
+
             centerPoint = new Vector2(this.GraphicsDevice.Viewport.Width / 2, this.GraphicsDevice.Viewport.Height / 2);
+
             SoundEffect.MasterVolume = 0.15f;
+            background.SetPosition(centerPoint);
+            spaceShip.SetPosition(centerPoint);
 
             base.Initialize();
         }
@@ -71,8 +82,7 @@ namespace WindowsGame1
             background.LoadContent(this.Content, "images/stars");
             calibri = Content.Load<SpriteFont>("calibri");
 
-            background.Size = 2.5f;
-            spaceShip.SetPosition(centerPoint);  
+            background.Size = 2.5f;           
         }
 
         /// <summary>
@@ -91,33 +101,52 @@ namespace WindowsGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            double dt = gameTime.ElapsedGameTime.TotalSeconds;
+
             KeyboardState keyboard = Keyboard.GetState();
+            MouseState mouse = Mouse.GetState();
 
-            bool left = keyboard.IsKeyDown(Keys.Left);
-            bool right = keyboard.IsKeyDown(Keys.Right);
-            bool up = keyboard.IsKeyDown(Keys.Up);
-            bool down = keyboard.IsKeyDown(Keys.Down);
-            bool speedUp = keyboard.IsKeyDown(Keys.X);
-            bool speedDown = keyboard.IsKeyDown(Keys.Y);
-            bool reset = keyboard.IsKeyDown(Keys.Enter);
-            bool finish = keyboard.IsKeyDown(Keys.Escape);
-            bool shoot = keyboard.IsKeyDown(Keys.Space);
-            bool fullScreenKeys = keyboard.IsKeyDown(Keys.F11);
+            Vector2 mousePos = new Vector2(mouse.X, mouse.Y);
+            Vector2 mouseDelta = mousePos - oldMousePos;
 
-            if (fullScreenKeys) graphics.ToggleFullScreen();
+            if (!trackSpaceShip)
+                camera.Move(mouseDelta, dt);
+            else
+                camera.Position = spaceShip.Position - centerPoint;
 
-            if (finish) this.Exit();
-       
-            if (right && !left) this.spaceShip.RotateRight(5.0f);
-            if (left && !right) this.spaceShip.RotateLeft(5.0f);
+            Keys[] keys = keyboard.GetPressedKeys();
+            foreach (Keys k in keys)
+            {
+                switch (k)
+                {
+                    case Keys.W:
+                        this.spaceShip.ThrustForward(200.0f); break;
+                    case Keys.A:
+                        this.spaceShip.RotateLeft(5.0f); break;
+                    case Keys.S:
+                        this.spaceShip.ThrustBackward(200.0f); break;
+                    case Keys.D:
+                        this.spaceShip.RotateRight(5.0f); break;
 
-            if (up && !down) this.spaceShip.ThrustForward(200.0f);
-            if (!up && down) this.spaceShip.ThrustBackward(200.0f);
-            if (reset) spaceShip.Reset(centerPoint);
+                    case Keys.Space:
+                        spaceShip.Shoot(); break;
+                    case Keys.Enter:
+                        spaceShip.Reset(); break;
 
-            if (shoot) spaceShip.Shoot();
+                    case Keys.O:
+                        trackSpaceShip = true; break;
+                    case Keys.P:
+                        trackSpaceShip = false; break;
 
+                    case Keys.F11:
+                        graphics.ToggleFullScreen(); break;
+                    case Keys.Escape:
+                        this.Exit(); break;
+                }
+            }        
+           
             spaceShip.Update(gameTime.ElapsedGameTime.TotalSeconds);
+            oldMousePos = mousePos;
 
             base.Update(gameTime);
         }
@@ -128,14 +157,15 @@ namespace WindowsGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            graphics.GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin();
-            background.Draw(this.spriteBatch);
-            spaceShip.Draw(this.spriteBatch);
+            double dt = gameTime.ElapsedGameTime.TotalSeconds;
 
-            spriteBatch.DrawString(calibri, String.Format("Lasers: {0}\nDrawTime: {1:0.0} ms\nSpeed: {2:000.0}, ASpeed: {3:000.0}", spaceShip.LaserCount, gameTime.ElapsedGameTime.TotalMilliseconds, spaceShip.Speed, spaceShip.AngularVelocity),
-                new Vector2(10, 10), Color.LightGreen,
-       0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
+            graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+            background.Draw(this.spriteBatch, camera);
+            spaceShip.Draw(this.spriteBatch, camera);
+
+            spriteBatch.DrawString(calibri, String.Format("Lasers: {0}\nDrawTime: {1:0.0} ms\nSpeed: {2:000.0}, ASpeed: {3:000.0}", spaceShip.LaserCount, dt, spaceShip.Speed, spaceShip.AngularVelocity),
+                new Vector2(10, 10), Color.LightGreen, 0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             spriteBatch.End();
             base.Draw(gameTime);
         }

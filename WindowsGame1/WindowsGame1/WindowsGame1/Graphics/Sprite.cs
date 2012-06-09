@@ -13,15 +13,18 @@ namespace WindowsGame1.Graphics
         public Vector2 Position;
         protected Texture2D spriteTexture;
         public float Rotation { get; set; }
-        public Vector2 Origin { get; set; }
         public float Size { get; set; }
         protected float layerDepth;
+
+        public static Vector2 texOffset(int width, int height)
+        {
+            return new Vector2(-width / 2, -height / 2);
+        }
 
         public Sprite()
         {
             Rotation = 0f;
             layerDepth = 1;
-            Origin = new Vector2(0, 0);
         }
 
         public virtual void LoadContent(ContentManager theContentManager, string theAssetName)
@@ -40,9 +43,10 @@ namespace WindowsGame1.Graphics
             Position = vect;
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch, Camera cam)
         {
-            spriteBatch.Draw(spriteTexture, Position, null, Color.White, Rotation, Origin, Size, SpriteEffects.None, layerDepth);
+            spriteBatch.Draw(spriteTexture, Position - cam.Position, null, Color.White, Rotation,
+                -texOffset(this.spriteTexture.Width, this.spriteTexture.Height), Size, SpriteEffects.None, layerDepth);
         }
     }
 }

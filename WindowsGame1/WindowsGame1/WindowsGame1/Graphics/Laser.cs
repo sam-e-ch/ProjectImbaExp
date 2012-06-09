@@ -32,8 +32,8 @@ namespace WindowsGame1.Graphics
             this.spaceShip = spaceShip;
             this.textures = new Dictionary<ShotColor, Texture2D>(3);
             this.watch = new Stopwatch();
-            this.FireRate = 10;
-            this.ShotLifeTime = 500;
+            this.FireRate = 0;
+            this.ShotLifeTime = 1000;
             watch.Start();
         }
 
@@ -52,9 +52,9 @@ namespace WindowsGame1.Graphics
             shots.RemoveAll(shot => shot.LifeTime >= this.ShotLifeTime);
         }
 
-        public void Draw(SpriteBatch sp)
+        public void Draw(SpriteBatch sp, Camera cam)
         {
-            shots.ForEach(shot => shot.Draw(sp, textures[shot.Color]));
+            shots.ForEach(shot => shot.Draw(sp,cam, textures[shot.Color]));
         }
 
         public void Shoot()
@@ -109,9 +109,9 @@ namespace WindowsGame1.Graphics
                 return (Position.X >= 0 && Position.X < r.Width && Position.Y >= 0 && Position.Y < r.Height);
             }
 
-            public void Draw(SpriteBatch sp, Texture2D tex)
+            public void Draw(SpriteBatch sp, Camera cam, Texture2D tex)
             {
-                sp.Draw(tex, Position, null, Microsoft.Xna.Framework.Color.White, (float)this.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 0);
+                sp.Draw(tex, Position - cam.Position, null, Microsoft.Xna.Framework.Color.White, (float)this.Rotation, -Sprite.texOffset(tex.Width, tex.Height), 1.0f, SpriteEffects.None, 0);
             }
         }
     }

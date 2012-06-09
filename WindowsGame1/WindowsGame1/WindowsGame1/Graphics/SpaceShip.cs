@@ -10,8 +10,8 @@ namespace WindowsGame1.Graphics
 {
     class SpaceShip : Sprite
     {
-        private float MAX_VELOCITY = 200.0f;
-        private float MAX_ANGULAR_VELOCITY = 5.0f;
+        private float MAX_VELOCITY = 300.0f;
+        private float MAX_ANGULAR_VELOCITY = 8.0f;
 
         private Vector2 _velocity;
         public Vector2 Velocity { 
@@ -63,6 +63,7 @@ namespace WindowsGame1.Graphics
         {
             Size = 1f;
             this.laser = new Laser(this);
+            this.laser.FireRate = 24;
             this.game = game;
         }
 
@@ -70,7 +71,6 @@ namespace WindowsGame1.Graphics
         {
             base.LoadContent(cm, theAssetName);
             laser.LoadContent(cm);
-            Origin = new Vector2(spriteTexture.Width / 2, spriteTexture.Height / 2);
         }
 
         public void RotateRight(float thrust)
@@ -108,10 +108,10 @@ namespace WindowsGame1.Graphics
             this.laser.Update(dt);
         }
 
-        public override void Draw(SpriteBatch sp)
+        public override void Draw(SpriteBatch sp, Camera cam)
         {
-            laser.Draw(sp);
-            sp.Draw(spriteTexture, Position, null, Color.White, (float)this.Rotation, Origin, Size, SpriteEffects.None, layerDepth);           
+            laser.Draw(sp, cam);
+            base.Draw(sp, cam);          
         }
 
         /// <summary>
