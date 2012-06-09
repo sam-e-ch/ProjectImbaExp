@@ -10,8 +10,10 @@ namespace WindowsGame1.Graphics
 {
     class SpaceShip : Sprite, ITrackable
     {
-        private float MAX_VELOCITY = 500.0f;
-        private float MAX_ANGULAR_VELOCITY = 8.0f;
+        private float MAX_VELOCITY = 750.0f;
+        private float MAX_ANGULAR_VELOCITY = 7.0f;
+
+        public float Mass { get; set; }
 
         private Vector2 _velocity;
         public Vector2 Velocity { 
@@ -65,6 +67,7 @@ namespace WindowsGame1.Graphics
             this.laser = new Laser(this);
             this.laser.FireRate = 15;
             this.game = game;
+            this.Mass = 8.0f;
         }
 
         public override void LoadContent(ContentManager cm, string theAssetName)
@@ -85,7 +88,7 @@ namespace WindowsGame1.Graphics
 
         public void ThrustForward(float thrust)
         {
-            this.Acceleration = thrust * (new Vector2((float)Math.Sin(this.Rotation), -(float)Math.Cos(this.Rotation)));
+            this.Acceleration = thrust / Mass * (new Vector2((float)Math.Sin(this.Rotation), -(float)Math.Cos(this.Rotation)));
         }
 
         public void ThrustBackward(float thrust)

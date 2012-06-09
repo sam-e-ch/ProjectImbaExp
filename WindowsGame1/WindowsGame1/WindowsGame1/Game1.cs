@@ -27,7 +27,7 @@ namespace WindowsGame1
         Sprite background;
 
         Camera camera;
-        bool trackSpaceShip = false;
+        bool trackSpaceShip = true;
        
         SpriteFont calibri;
         Vector2 oldMousePos;
@@ -122,13 +122,13 @@ namespace WindowsGame1
                 switch (k)
                 {
                     case Keys.W:
-                        this.spaceShip.ThrustForward(300.0f); break;
+                        this.spaceShip.ThrustForward(3000.0f); break;
                     case Keys.A:
-                        this.spaceShip.RotateLeft(15.0f); break;
+                        this.spaceShip.RotateLeft(12.0f); break;
                     case Keys.S:
-                        this.spaceShip.ThrustBackward(300.0f); break;
+                        this.spaceShip.ThrustBackward(3000.0f); break;
                     case Keys.D:
-                        this.spaceShip.RotateRight(15.0f); break;
+                        this.spaceShip.RotateRight(12.0f); break;
 
                     case Keys.Space:
                         spaceShip.Shoot(); break;
