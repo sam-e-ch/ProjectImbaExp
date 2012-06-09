@@ -27,7 +27,6 @@ namespace WindowsGame1
         Sprite background;
        
         SpriteFont calibri;
-        int fps;
   
         public Game1()
         {
@@ -36,6 +35,9 @@ namespace WindowsGame1
 
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+            graphics.SynchronizeWithVerticalRetrace = false;
+
+            this.IsFixedTimeStep = false;
         }
 
         /// <summary>
@@ -103,21 +105,17 @@ namespace WindowsGame1
             if (fullScreenKeys) graphics.ToggleFullScreen();
 
             if (finish) this.Exit();
+       
+            if (right && !left) this.spaceShip.RotateRight(5.0f);
+            if (left && !right) this.spaceShip.RotateLeft(5.0f);
 
-            float rotateStep = 0.15f;
-            
-            if (right && !left) this.spaceShip.RotateRight(rotateStep);
-            if (left && !right) this.spaceShip.RotateLeft(rotateStep);
-  
-
-            if (up && !down)this.spaceShip.ThrustForward(0.1f);
+            if (up && !down) this.spaceShip.ThrustForward(200.0f);
+            if (!up && down) this.spaceShip.ThrustBackward(200.0f);
             if (reset) spaceShip.Reset(centerPoint);
 
             if (shoot) spaceShip.Shoot();
-           
-            fps = (gameTime.ElapsedGameTime.Milliseconds);
 
-            spaceShip.Update();
+            spaceShip.Update(gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -132,8 +130,9 @@ namespace WindowsGame1
             spriteBatch.Begin();
             background.Draw(this.spriteBatch);
             spaceShip.Draw(this.spriteBatch);
-            
-            spriteBatch.DrawString(calibri, ("Lasers: " + spaceShip.LaserCount + "\nFPS: " + fps), new Vector2(10, 10), Color.LightGreen,
+
+            spriteBatch.DrawString(calibri, String.Format("Lasers: {0}\nDrawTime: {1:0.0} ms\nSpeed: {2:000.0}, ASpeed: {3:000.0}", spaceShip.LaserCount, gameTime.ElapsedGameTime.TotalMilliseconds, spaceShip.Speed, spaceShip.AngularVelocity),
+                new Vector2(10, 10), Color.LightGreen,
        0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             spriteBatch.End();
             base.Draw(gameTime);

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace WindowsGame1.Graphics
 {
@@ -18,12 +19,20 @@ namespace WindowsGame1.Graphics
         private Dictionary<ShotColor, Texture2D> textures;
 
         public float Heading { get; set; }
+        public int ShotRate { get; set; }
+        public int ShotLifeTime { get; set; }
 
+        private Stopwatch watch;
+        
         public Laser(SpaceShip spaceShip)
         {
             this.shots = new List<LaserShot>();
             this.spaceShip = spaceShip;
             this.textures = new Dictionary<ShotColor, Texture2D>();
+            this.watch = new Stopwatch();
+            this.ShotRate = 20;
+            this.ShotLifeTime = 1500;
+            watch.Start();
         }
 
         public void LoadContent(ContentManager cm)
@@ -33,10 +42,10 @@ namespace WindowsGame1.Graphics
             textures[ShotColor.Blue] = cm.Load<Texture2D>("images/laser_blue");
         }
 
-        public void Update()
+        public void Update(double dt)
         {
-            shots.ForEach(shot => shot.Update());
-            shots.RemoveAll(shot => !shot.isInField(spaceShip.game.GraphicsDevice.Viewport.Bounds));
+            shots.ForEach(shot => shot.Update(dt));
+            shots.RemoveAll(shot => shot.LifeTime >= this.ShotLifeTime);
         }
 
         public void Draw(SpriteBatch sp)
@@ -46,9 +55,13 @@ namespace WindowsGame1.Graphics
 
         public void Shoot()
         {
-            shots.Add(new LaserShot(ShotColor.Red, Heading - MathHelper.ToRadians(10.0f), spaceShip.Position));
-            shots.Add(new LaserShot(ShotColor.Blue, Heading, spaceShip.Position));
-            shots.Add(new LaserShot(ShotColor.Green, Heading + MathHelper.ToRadians(10.0f), spaceShip.Position));
+            if (watch.Elapsed.TotalMilliseconds >= 1000.0f / ShotRate)
+            {
+                shots.Add(new LaserShot(ShotColor.Red, Heading - MathHelper.ToRadians(10.0f), spaceShip.Position));
+                shots.Add(new LaserShot(ShotColor.Blue, Heading, spaceShip.Position));
+                shots.Add(new LaserShot(ShotColor.Green, Heading + MathHelper.ToRadians(10.0f), spaceShip.Position));
+                watch.Restart();
+            }            
         }
 
         public int getShotCount()
@@ -60,12 +73,14 @@ namespace WindowsGame1.Graphics
 
         private class LaserShot
         {
-            public const int SPEED = 10;
+            public const int SPEED = 1000;
 
             public float Rotation { get; set; }
             public Vector2 Position { get; set; }
             public ShotColor Color { get; set; }
-            public int LifeTime { get; set; }
+
+            private Stopwatch watch;
+            public long LifeTime { get { return watch.ElapsedMilliseconds; } }
 
             public LaserShot(ShotColor color, float direction, Vector2 position)
                 : base()
@@ -73,12 +88,13 @@ namespace WindowsGame1.Graphics
                 Rotation = direction;
                 Position = position;
                 Color = color;
-                LifeTime = 0;
+                watch = new Stopwatch();
+                watch.Start();
             }
 
-            public void Update()
+            public void Update(double dt)
             {
-                Position += SPEED * (new Vector2((float)(Math.Sin(Rotation)), (float)(-Math.Cos(Rotation))));
+                Position += SPEED * (new Vector2((float)(Math.Sin(Rotation)), (float)(-Math.Cos(Rotation)))) * (float)dt;
             }
 
             public bool isInField(Rectangle r)
