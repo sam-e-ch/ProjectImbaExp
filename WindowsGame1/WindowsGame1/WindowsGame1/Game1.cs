@@ -42,7 +42,7 @@ namespace WindowsGame1
             graphics.SynchronizeWithVerticalRetrace = true;
 
             camera = new Camera();
-            camera.Speed = 100.0f;
+            camera.Speed = 3.0f;
 
             graphics.ApplyChanges();
 
@@ -110,7 +110,7 @@ namespace WindowsGame1
             Vector2 mouseDelta = mousePos - oldMousePos;
 
             if (!trackSpaceShip)
-                camera.Move(mouseDelta, dt);
+                camera.Move(mouseDelta);
             else
                 camera.Position = spaceShip.Position - centerPoint;
 
@@ -164,7 +164,7 @@ namespace WindowsGame1
             background.Draw(this.spriteBatch, camera);
             spaceShip.Draw(this.spriteBatch, camera);
 
-            spriteBatch.DrawString(calibri, String.Format("Lasers: {0}\nDrawTime: {1:0.0} ms\nSpeed: {2:000.0}, ASpeed: {3:000.0}", spaceShip.LaserCount, dt, spaceShip.Speed, spaceShip.AngularVelocity),
+            spriteBatch.DrawString(calibri, String.Format("Lasers: {0}\nDrawTime: {1:0.0} ms\nSpeed: {2:000.0}, ASpeed: {3:000.0}", spaceShip.LaserCount, dt * 1000, spaceShip.Speed, spaceShip.AngularVelocity),
                 new Vector2(10, 10), Color.LightGreen, 0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             spriteBatch.End();
             base.Draw(gameTime);

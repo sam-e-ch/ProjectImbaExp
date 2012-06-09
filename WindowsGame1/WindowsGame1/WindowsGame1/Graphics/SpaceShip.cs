@@ -63,7 +63,7 @@ namespace WindowsGame1.Graphics
         {
             Size = 1f;
             this.laser = new Laser(this);
-            this.laser.FireRate = 24;
+            this.laser.FireRate = 15;
             this.game = game;
         }
 

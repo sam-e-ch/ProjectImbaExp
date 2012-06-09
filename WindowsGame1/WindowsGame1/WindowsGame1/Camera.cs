@@ -32,9 +32,9 @@ namespace WindowsGame1
             this.Position += new Vector2(0, Speed);
         }
 
-        internal void Move(Vector2 mouseDelta, double dt)
+        internal void Move(Vector2 mouseDelta)
         {
-            this.Position += Speed * mouseDelta * (float)dt;
+            this.Position += Speed * mouseDelta;
         }
     }
 }
