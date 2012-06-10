@@ -112,6 +112,7 @@
     <Compile Include="Graphics\Laser.cs" />
     <Compile Include="Graphics\SpaceShip.cs" />
     <Compile Include="Graphics\Sprite.cs" />
+    <Compile Include="Graphics\TiledSprite.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="PhysicsObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

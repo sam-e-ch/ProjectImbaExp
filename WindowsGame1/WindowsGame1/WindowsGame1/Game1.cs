@@ -23,7 +23,7 @@ namespace WindowsGame1
 		SpriteBatch spriteBatch;
 		SpaceShip spaceShip;
 
-		Sprite background;
+		TiledSprite background;
 
 		Camera camera;
 		bool trackSpaceShip = true;
@@ -57,7 +57,7 @@ namespace WindowsGame1
 		protected override void Initialize()
 		{
 			spaceShip = new Graphics.SpaceShip(this);
-			background = new Graphics.Sprite();
+			background = new Graphics.TiledSprite("images/stars", 9);
 
 			SoundEffect.MasterVolume = 0.15f;
 			background.Position = Vector2.Zero;
@@ -76,10 +76,10 @@ namespace WindowsGame1
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			spaceShip.LoadContent(this.Content);
-			background.LoadContent(this.Content, "images/stars");
-			calibri = Content.Load<SpriteFont>("calibri");
+			background.LoadContent(this.Content);
+			background.Size = 3.0f;
 
-			background.Size = 5.0f;
+			calibri = Content.Load<SpriteFont>("calibri");
 		}
 
 		/// <summary>

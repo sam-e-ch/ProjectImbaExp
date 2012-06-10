@@ -64,13 +64,13 @@ namespace WindowsGame1.Graphics
 			this.laser.FireRate = 15;
 			this.game = game;
 			this.Mass = 8.0f;
-			this.sprite = new Sprite();
+			this.sprite = new Sprite("images/shuttle");
 			this.sprite.Size = 1.0f;
 		}
 
 		public void LoadContent(ContentManager cm)
 		{
-			this.sprite.LoadContent(cm, "images/shuttle");
+			this.sprite.LoadContent(cm);
 			laser.LoadContent(cm);
 		}
 
