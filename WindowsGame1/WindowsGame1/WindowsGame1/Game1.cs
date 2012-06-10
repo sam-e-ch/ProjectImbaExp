@@ -14,171 +14,168 @@ using WindowsGame1.Graphics;
 
 namespace WindowsGame1
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
-    {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        SpaceShip spaceShip;
-        
-        Vector2 centerPoint;
-        Sprite background;
+	/// <summary>
+	/// This is the main type for your game
+	/// </summary>
+	public class Game1 : Microsoft.Xna.Framework.Game
+	{
+		GraphicsDeviceManager graphics;
+		SpriteBatch spriteBatch;
+		SpaceShip spaceShip;
 
-        Camera camera;
-        bool trackSpaceShip = true;
-       
-        SpriteFont calibri;
-        Vector2 oldMousePos;
-  
-        public Game1()
-        {
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+		Sprite background;
 
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
-            graphics.SynchronizeWithVerticalRetrace = false;
+		Camera camera;
+		bool trackSpaceShip = true;
 
-            graphics.ApplyChanges();
+		SpriteFont calibri;
+		Vector2 oldMousePos;
 
-            camera = new Camera(GraphicsDevice.Viewport.Bounds);
-            camera.Speed = 3.0f;
+		public Game1()
+		{
+			graphics = new GraphicsDeviceManager(this);
+			Content.RootDirectory = "Content";
 
-            this.IsFixedTimeStep = true;
-        }
+			graphics.PreferredBackBufferWidth = 1280;
+			graphics.PreferredBackBufferHeight = 720;
+			graphics.SynchronizeWithVerticalRetrace = false;
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
-        protected override void Initialize()
-        {
-            spaceShip = new Graphics.SpaceShip(this);
-            background = new Graphics.Sprite();            
+			graphics.ApplyChanges();
 
-            centerPoint = new Vector2(this.GraphicsDevice.Viewport.Width / 2, this.GraphicsDevice.Viewport.Height / 2);
+			camera = new Camera(GraphicsDevice.Viewport.Bounds);
+			camera.Speed = 3.0f;
 
-            SoundEffect.MasterVolume = 0.15f;
-            background.SetPosition(centerPoint);
-            spaceShip.SetPosition(centerPoint);
+			this.IsFixedTimeStep = true;
+		}
 
-            base.Initialize();
-        }
+		/// <summary>
+		/// Allows the game to perform any initialization it needs to before starting to run.
+		/// This is where it can query for any required services and load any non-graphic
+		/// related content.  Calling base.Initialize will enumerate through any components
+		/// and initialize them as well.
+		/// </summary>
+		protected override void Initialize()
+		{
+			spaceShip = new Graphics.SpaceShip(this);
+			background = new Graphics.Sprite();
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
-        protected override void LoadContent()
-        {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+			SoundEffect.MasterVolume = 0.15f;
+			background.Position = Vector2.Zero;
+			spaceShip.Position = Vector2.Zero;
 
-            spaceShip.LoadContent(this.Content, "images/shuttle");
-            background.LoadContent(this.Content, "images/stars");
-            calibri = Content.Load<SpriteFont>("calibri");
+			base.Initialize();
+		}
 
-            background.Size = 2.5f;           
-        }
+		/// <summary>
+		/// LoadContent will be called once per game and is the place to load
+		/// all of your content.
+		/// </summary>
+		protected override void LoadContent()
+		{
+			// Create a new SpriteBatch, which can be used to draw textures.
+			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
+			spaceShip.LoadContent(this.Content);
+			background.LoadContent(this.Content, "images/stars");
+			calibri = Content.Load<SpriteFont>("calibri");
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
-        {
-            double dt = gameTime.ElapsedGameTime.TotalSeconds;
+			background.Size = 5.0f;
+		}
 
-            KeyboardState keyboard = Keyboard.GetState();
-            MouseState mouse = Mouse.GetState();
+		/// <summary>
+		/// UnloadContent will be called once per game and is the place to unload
+		/// all content.
+		/// </summary>
+		protected override void UnloadContent()
+		{
+			// TODO: Unload any non ContentManager content here
+		}
 
-            Vector2 mousePos = new Vector2(mouse.X, mouse.Y);
-            Vector2 mouseDelta = mousePos - oldMousePos;
+		/// <summary>
+		/// Allows the game to run logic such as updating the world,
+		/// checking for collisions, gathering input, and playing audio.
+		/// </summary>
+		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+		protected override void Update(GameTime gameTime)
+		{
+			double dt = gameTime.ElapsedGameTime.TotalSeconds;
 
-            oldMousePos = mousePos;
-            
-            if (!trackSpaceShip)
-                camera.Move(mouseDelta);
-            else
-                camera.Track(spaceShip);
+			KeyboardState keyboard = Keyboard.GetState();
+			MouseState mouse = Mouse.GetState();
 
-            Keys[] keys = keyboard.GetPressedKeys();
-            foreach (Keys k in keys)
-            {
-                switch (k)
-                {
-                    case Keys.W:
-                        this.spaceShip.ThrustForward(3000.0f); break;
-                    case Keys.A:
-                        this.spaceShip.RotateLeft(12.0f); break;
-                    case Keys.S:
-                        this.spaceShip.ThrustBackward(3000.0f); break;
-                    case Keys.D:
-                        this.spaceShip.RotateRight(12.0f); break;
+			Vector2 mousePos = new Vector2(mouse.X, mouse.Y);
+			Vector2 mouseDelta = mousePos - oldMousePos;
 
-                    case Keys.Space:
-                        spaceShip.Shoot(); break;
-                    case Keys.Enter:
-                        spaceShip.Reset(); break;
+			oldMousePos = mousePos;
 
-                    case Keys.O:
-                        trackSpaceShip = true; break;
-                    case Keys.P:
-                        trackSpaceShip = false; break;
-                    case Keys.M:
-                        Mute(); break;
+			if (!trackSpaceShip)
+				camera.Move(mouseDelta);
+			else
+				camera.Track(spaceShip);
 
-                    case Keys.F11:
-                        graphics.ToggleFullScreen(); break;
-                    case Keys.Escape:
-                        this.Exit(); break;
-                }
-            }        
-           
-            spaceShip.Update(gameTime.ElapsedGameTime.TotalSeconds);
-            
-            base.Update(gameTime);
-        }
+			Keys[] keys = keyboard.GetPressedKeys();
+			foreach (Keys k in keys)
+			{
+				switch (k)
+				{
+					case Keys.W:
+						this.spaceShip.ThrustForward(3000.0f); break;
+					case Keys.A:
+						this.spaceShip.RotateLeft(12.0f); break;
+					case Keys.S:
+						this.spaceShip.ThrustBackward(3000.0f); break;
+					case Keys.D:
+						this.spaceShip.RotateRight(12.0f); break;
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
-            double dt = gameTime.ElapsedGameTime.TotalSeconds;
+					case Keys.Space:
+						spaceShip.Shoot(); break;
+					case Keys.Enter:
+						spaceShip.Reset(); break;
 
-            graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
+					case Keys.O:
+						trackSpaceShip = true; break;
+					case Keys.P:
+						trackSpaceShip = false; break;
+					case Keys.M:
+						Mute(); break;
 
-            background.Draw(this.spriteBatch, camera);
-            spaceShip.Draw(this.spriteBatch, camera);
+					case Keys.F11:
+						graphics.ToggleFullScreen(); break;
+					case Keys.Escape:
+						this.Exit(); break;
+				}
+			}
 
-            spriteBatch.DrawString(calibri, String.Format("Lasers: {0}\nDrawTime: {1:0.0} ms\nSpeed: {2:000.0}, ASpeed: {3:000.0}", spaceShip.LaserCount, dt * 1000, spaceShip.Speed, spaceShip.AngularVelocity),
-                new Vector2(10, 10), Color.LightGreen, 0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
-            
-            spriteBatch.End();
+			spaceShip.Update(gameTime.ElapsedGameTime.TotalSeconds);
 
-            base.Draw(gameTime);
-        }
+			base.Update(gameTime);
+		}
 
-        private void Mute()
-        {
-            SoundEffect.MasterVolume = 0;
-        }
-    }
+		/// <summary>
+		/// This is called when the game should draw itself.
+		/// </summary>
+		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+		protected override void Draw(GameTime gameTime)
+		{
+			double dt = gameTime.ElapsedGameTime.TotalSeconds;
+
+			graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+			spriteBatch.Begin();
+
+			background.Draw(this.spriteBatch, camera);
+			spaceShip.Draw(this.spriteBatch, camera);
+
+			spriteBatch.DrawString(calibri, String.Format("Lasers: {0}\nDrawTime: {1:0.0} ms\nSpeed: {2:000.0}, ASpeed: {3:000.0}", spaceShip.LaserCount, dt * 1000, spaceShip.Speed, spaceShip.AngularVelocity),
+				new Vector2(10, 10), Color.LightGreen, 0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
+
+			spriteBatch.End();
+
+			base.Draw(gameTime);
+		}
+
+		private void Mute()
+		{
+			SoundEffect.MasterVolume = 0;
+		}
+	}
 }

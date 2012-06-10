@@ -6,8 +6,8 @@ using Microsoft.Xna.Framework;
 
 namespace WindowsGame1.Graphics
 {
-    interface ITrackable
-    {
-        Vector2 getPosition();
-    }
+	public interface ITrackable
+	{
+		Vector2 Position { get; }
+	}
 }

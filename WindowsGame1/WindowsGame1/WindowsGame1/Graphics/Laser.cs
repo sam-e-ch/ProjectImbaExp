@@ -13,105 +13,107 @@ using System.Threading.Tasks;
 
 namespace WindowsGame1.Graphics
 {
-    class Laser
-    {
-        private List<LaserShot> shots;
-        private SpaceShip spaceShip;
-        private SoundEffect laserSound;
-        private Dictionary<ShotColor, Texture2D> textures;
+	class Laser
+	{
+		private List<LaserShot> shots;
+		private SpaceShip spaceShip;
+		private SoundEffect laserSound;
+		private Dictionary<ShotColor, Texture2D> textures;
 
-        public float Heading { get; set; }
-        public int FireRate { get; set; }
-        public int ShotLifeTime { get; private set; }
+		public float Heading { get; set; }
+		public int FireRate { get; set; }
+		public int ShotLifeTime { get; private set; }
 
-        private Stopwatch watch;
-        
-        public Laser(SpaceShip spaceShip)
-        {
-            this.shots = new List<LaserShot>();
-            this.spaceShip = spaceShip;
-            this.textures = new Dictionary<ShotColor, Texture2D>(3);
-            this.watch = new Stopwatch();
-            this.FireRate = 0;
-            this.ShotLifeTime = 1000;
-            watch.Start();
-        }
+		private Stopwatch watch;
 
-        public void LoadContent(ContentManager cm)
-        {
-            textures[ShotColor.Red] = cm.Load<Texture2D>("images/laser_red");
-            textures[ShotColor.Green] = cm.Load<Texture2D>("images/laser_green");
-            textures[ShotColor.Blue] = cm.Load<Texture2D>("images/laser_blue");
+		public Laser(SpaceShip spaceShip)
+		{
+			this.shots = new List<LaserShot>();
+			this.spaceShip = spaceShip;
+			this.textures = new Dictionary<ShotColor, Texture2D>(3);
+			this.watch = new Stopwatch();
+			this.FireRate = 0;
+			this.ShotLifeTime = 1000;
+			watch.Start();
+		}
 
-            laserSound = cm.Load<SoundEffect>("laser_sound");
-        }
+		public void LoadContent(ContentManager cm)
+		{
+			textures[ShotColor.Red] = cm.Load<Texture2D>("images/laser_red");
+			textures[ShotColor.Green] = cm.Load<Texture2D>("images/laser_green");
+			textures[ShotColor.Blue] = cm.Load<Texture2D>("images/laser_blue");
 
-        public void Update(double dt)
-        {
-            shots.ForEach(shot => shot.Update(dt));
-            shots.RemoveAll(shot => shot.LifeTime >= this.ShotLifeTime);
-        }
+			laserSound = cm.Load<SoundEffect>("laser_sound");
+		}
 
-        public void Draw(SpriteBatch sp, Camera cam)
-        {
-            shots.ForEach(shot => shot.Draw(sp,cam, textures[shot.Color]));
-        }
+		public void Update(double dt)
+		{
+			shots.ForEach(shot => shot.Update(dt));
+			shots.RemoveAll(shot => shot.LifeTime >= this.ShotLifeTime);
+		}
 
-        public void Shoot()
-        {
-            if (watch.Elapsed.TotalMilliseconds >= 1000.0f / FireRate)
-            {
-                shots.Add(new LaserShot(ShotColor.Red, Heading - MathHelper.ToRadians(10.0f), spaceShip.Position));
-                shots.Add(new LaserShot(ShotColor.Blue, Heading, spaceShip.Position));
-                shots.Add(new LaserShot(ShotColor.Green, Heading + MathHelper.ToRadians(10.0f), spaceShip.Position));
-                 
-                laserSound.Play();
+		public void Draw(SpriteBatch sp, Camera cam)
+		{
+			shots.ForEach(shot => shot.Draw(sp, cam, textures[shot.Color]));
+		}
 
-                watch.Restart();
-            }            
-        }
+		public void Shoot()
+		{
+			if (watch.Elapsed.TotalMilliseconds >= 1000.0f / FireRate)
+			{
+				shots.Add(new LaserShot(ShotColor.Red, Heading - MathHelper.ToRadians(10.0f), spaceShip.Position));
+				shots.Add(new LaserShot(ShotColor.Blue, Heading, spaceShip.Position));
+				shots.Add(new LaserShot(ShotColor.Green, Heading + MathHelper.ToRadians(10.0f), spaceShip.Position));
 
-        public int getShotCount()
-        {
-            return this.shots.Count;
-        }
+				laserSound.Play();
 
-        private enum ShotColor { Red = 0, Green = 1, Blue = 2 };
+				watch.Restart();
+			}
+		}
 
-        private class LaserShot
-        {
-            public const int SPEED = 1500;
+		public int getShotCount()
+		{
+			return this.shots.Count;
+		}
 
-            public float Rotation { get; set; }
-            public Vector2 Position { get; set; }
-            public ShotColor Color { get; set; }
+		private enum ShotColor { Red = 0, Green = 1, Blue = 2 };
 
-            private Stopwatch watch;
-            public long LifeTime { get { return watch.ElapsedMilliseconds; } }
+		private class LaserShot
+		{
+			public const int SPEED = 1500;
 
-            public LaserShot(ShotColor color, float direction, Vector2 position)
-            {
-                Rotation = direction;
-                Position = position;
-                Color = color;
-                watch = new Stopwatch();
-                watch.Start();
-            }
+			public float Rotation { get; set; }
+			public Vector2 Position { get; set; }
+			public ShotColor Color { get; set; }
 
-            public void Update(double dt)
-            {
-                Position += SPEED * (new Vector2((float)(Math.Sin(Rotation)), (float)(-Math.Cos(Rotation)))) * (float)dt;
-            }
+			private Stopwatch watch;
+			public long LifeTime { get { return watch.ElapsedMilliseconds; } }
 
-            public bool isInField(Rectangle r)
-            {
-                return (Position.X >= 0 && Position.X < r.Width && Position.Y >= 0 && Position.Y < r.Height);
-            }
+			public LaserShot(ShotColor color, float direction, Vector2 position)
+			{
+				Rotation = direction;
+				Position = position;
+				Color = color;
+				watch = new Stopwatch();
+				watch.Start();
+			}
 
-            public void Draw(SpriteBatch sp, Camera cam, Texture2D tex)
-            {
-                sp.Draw(tex, Position - cam.Position, null, Microsoft.Xna.Framework.Color.White, (float)this.Rotation, -Sprite.texOffset(tex.Width, tex.Height), 1.0f, SpriteEffects.None, 0);
-            }
-        }
-    }
+			public void Update(double dt)
+			{
+				Position += SPEED * (new Vector2((float)(Math.Sin(Rotation)), (float)(-Math.Cos(Rotation)))) * (float)dt;
+			}
+
+			public bool isInField(Rectangle r)
+			{
+				return (Position.X >= 0 && Position.X < r.Width && Position.Y >= 0 && Position.Y < r.Height);
+			}
+
+			public void Draw(SpriteBatch sp, Camera cam, Texture2D tex)
+			{
+				sp.Draw(tex, Position - cam.Position,
+				 null, Microsoft.Xna.Framework.Color.White, (float)this.Rotation, -Sprite.texOffset(tex.Width, tex.Height, 1.0f),
+				  1.0f, SpriteEffects.None, 0);
+			}
+		}
+	}
 }
