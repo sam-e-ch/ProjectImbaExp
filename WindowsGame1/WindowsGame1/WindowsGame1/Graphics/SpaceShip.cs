@@ -56,6 +56,8 @@ namespace WindowsGame1.Graphics
 		private Game game;
 		public int LaserCount { get { return this.laser.getShotCount(); } }
 
+		public Rectangle BoundingBox { get; private set; }
+
 		private Laser laser;
 
 		public SpaceShip(Game game)	: base()
@@ -104,6 +106,11 @@ namespace WindowsGame1.Graphics
 			this.laser.Heading = this.Angle;
 			this.Acceleration = Vector2.Zero;
 			this.AngularAcceleration = 0.0f;
+
+			Vector2 texOffset = Sprite.texOffset(this.sprite.Texture.Width, this.sprite.Texture.Height, this.sprite.Size);
+
+			this.BoundingBox = new Rectangle((int)(this.Position.X + texOffset.X), (int)(this.Position.Y + texOffset.Y), (int)(this.sprite.Texture.Width * this.sprite.Size),
+				(int)(this.sprite.Texture.Height * (int)this.sprite.Size));
 
 			this.laser.Update(dt);
 		}

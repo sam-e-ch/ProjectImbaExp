@@ -148,6 +148,9 @@ namespace WindowsGame1
 
 			spaceShip.Update(gameTime.ElapsedGameTime.TotalSeconds);
 
+			if (!camera.isVisible(spaceShip.BoundingBox))
+				//this.Exit();
+
 			base.Update(gameTime);
 		}
 

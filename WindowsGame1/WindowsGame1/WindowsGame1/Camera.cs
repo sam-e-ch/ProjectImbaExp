@@ -9,17 +9,18 @@ namespace WindowsGame1
 {
 	public class Camera
 	{
-		public Vector2 Position { get; private set; }
 		public float Speed { get; set; }
+		public Vector2 Position { get; private set; }
 
-		private Rectangle view;
+		public Rectangle View { get; private set; }
 
 		private Vector2 _target;
 		public Vector2 Target { get { return _target; } set { _target = value; Update(); } }
+		private Vector2 oldTarget;
 
 		public Camera(Rectangle view)
 		{
-			this.view = view;
+			this.View = view;
 			this.Target = Vector2.Zero;
 		}
 
@@ -50,12 +51,20 @@ namespace WindowsGame1
 
 		public void Track(ITrackable obj)
 		{
-			this.Target = obj.Position;
+			Vector2 targetOffset = obj.Position - oldTarget;
+			this.Target += targetOffset * 0.04f;
 		}
 
 		private void Update()
 		{
-			this.Position = Target - new Vector2(view.Width / 2, view.Height / 2);
+			this.Position = this.Target - new Vector2(this.View.Width / 2, this.View.Height / 2);
+			this.View = new Rectangle((int)Position.X, (int)Position.Y, this.View.Width, this.View.Height);
+			this.oldTarget = this.Target;
+		}
+
+		public bool isVisible(Rectangle r)
+		{
+			return r.Intersects(this.View);
 		}
 	}
 }
