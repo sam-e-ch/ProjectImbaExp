@@ -53,18 +53,16 @@ namespace WindowsGame1.Graphics
 			}
 		}
 
-		private Game game;
 		public int LaserCount { get { return this.laser.getShotCount(); } }
 
 		public Rectangle BoundingBox { get; private set; }
 
 		private Laser laser;
 
-		public SpaceShip(Game game)	: base()
+		public SpaceShip() : base()
 		{
 			this.laser = new Laser(this);
 			this.laser.FireRate = 15;
-			this.game = game;
 			this.Mass = 8.0f;
 			this.sprite = new Sprite("images/shuttle");
 			this.sprite.Size = 1.0f;

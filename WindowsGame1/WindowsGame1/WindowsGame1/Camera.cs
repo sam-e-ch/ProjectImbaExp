@@ -71,7 +71,7 @@ namespace WindowsGame1
 			this.toTrack = null;
 		}
 
-		public void Update(float dt)
+		public void Update(double dt)
 		{
 			if (track)
 			{
@@ -80,10 +80,10 @@ namespace WindowsGame1
 			}
 			else
 			{
-				this.Velocity += this.Acceleration * dt;				
+				this.Velocity += this.Acceleration * (float)dt;				
 			}
 
-			this.Target += this.Velocity * dt;
+			this.Target += this.Velocity * (float)dt;
 
 			this.Position = this.Target - new Vector2(this.View.Width / 2, this.View.Height / 2);
 			this.View = new Rectangle((int)Position.X, (int)Position.Y, this.View.Width, this.View.Height);

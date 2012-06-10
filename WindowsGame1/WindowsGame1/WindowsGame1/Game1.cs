@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using System.Threading;
 using System.Threading.Tasks;
 using WindowsGame1.Graphics;
+using WindowsGame1.Input;
 
 namespace WindowsGame1
 {
@@ -23,33 +24,37 @@ namespace WindowsGame1
 		SpriteBatch spriteBatch;
 		SpaceShip spaceShip;
 
-		float size; 
+		//float size;
 
 		TiledSprite background;
 
 		Camera camera;
-		bool trackSpaceShip = true;
+		bool track = true;
+		bool mute = false;
 
 		SpriteFont calibri;
-		Vector2 oldMousePos;
 
-		Effect flicker;
+		Effect moblur;
+		InputState input;
 
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
-			Content.RootDirectory = "Content";
 
 			graphics.PreferredBackBufferWidth = 1280;
 			graphics.PreferredBackBufferHeight = 720;
-			graphics.SynchronizeWithVerticalRetrace = true;
+			graphics.SynchronizeWithVerticalRetrace = false;
 			graphics.ApplyChanges();
 
-			camera = new Camera(GraphicsDevice.Viewport.Bounds);
-			camera.Speed = 300.0f;
-			camera.Inertia = 0.4f;
+			this.IsFixedTimeStep = false;
 
-			this.IsFixedTimeStep = true;
+			Content.RootDirectory = "Content";
+
+			background = new TiledSprite("images/stars", 9);
+			spaceShip = new SpaceShip();
+
+			camera = new Camera(GraphicsDevice.Viewport.Bounds);		
+			input = new InputState();
 		}
 
 		/// <summary>
@@ -60,12 +65,15 @@ namespace WindowsGame1
 		/// </summary>
 		protected override void Initialize()
 		{
-			spaceShip = new Graphics.SpaceShip(this);
-			background = new Graphics.TiledSprite("images/stars", 9);
+			spaceShip.Position = Vector2.Zero;			
+			background.Position = Vector2.Zero;
+			background.Size = 3.0f;
+
+			camera.Speed = 200.0f;
+			camera.Inertia = 0.4f;
+			camera.Track(spaceShip);
 
 			SoundEffect.MasterVolume = 0.15f;
-			background.Position = Vector2.Zero;
-			spaceShip.Position = Vector2.Zero;
 
 			base.Initialize();
 		}
@@ -81,10 +89,8 @@ namespace WindowsGame1
 
 			spaceShip.LoadContent(this.Content);
 			background.LoadContent(this.Content);
-			background.Size = 3.0f;
 
-			flicker = Content.Load<Effect>("MotionBlur");
-
+			moblur = Content.Load<Effect>("MotionBlur");
 			calibri = Content.Load<SpriteFont>("calibri");
 		}
 
@@ -105,67 +111,38 @@ namespace WindowsGame1
 		protected override void Update(GameTime gameTime)
 		{
 			double dt = gameTime.ElapsedGameTime.TotalSeconds;
-			size += (float)gameTime.ElapsedGameTime.TotalSeconds;
+			input.Update();
+
+			if (input.isPressed(Keys.W)) spaceShip.ThrustForward(3000.0f);
+			if (input.isPressed(Keys.A)) spaceShip.RotateLeft(12.0f); ;
+			if (input.isPressed(Keys.S)) spaceShip.ThrustBackward(3000.0f);
+			if (input.isPressed(Keys.D)) spaceShip.RotateRight(12.0f);
+
+			if (input.isPressed(Keys.Space)) spaceShip.Shoot();
+			if (input.isPressed(Keys.Enter)) spaceShip.Reset();
+
+			if (input.isToggled(Keys.O)) {
+				track = !track;
+
+				if (track) camera.Track(spaceShip);
+				else camera.UnTrack();
+			}
+
+			if (input.isToggled(Keys.M)) ToggleMute();
+
+			if (input.isToggled(Keys.F11)) graphics.ToggleFullScreen();
+			if (input.isToggled(Keys.Escape)) Exit();
+
+			if (!track) camera.Move(input.getMouseOffset());
+
+			//size += (float)gameTime.ElapsedGameTime.TotalSeconds;
 			//flicker.Parameters["size"].SetValue(size);
-			flicker.Parameters["vel"].SetValue(spaceShip.Velocity / 100.0f);
+			moblur.Parameters["vel"].SetValue(camera.Velocity / 1000.0f * (float)Math.Pow(2, camera.Velocity.Length() / 400.0f));
 
-			KeyboardState keyboard = Keyboard.GetState();
-			MouseState mouse = Mouse.GetState();
-
-			Vector2 mousePos = new Vector2(mouse.X, mouse.Y);
-			Vector2 mouseDelta = mousePos - oldMousePos;
-
-			oldMousePos = mousePos;
-
-			if (trackSpaceShip)
-			{
-				camera.Track(spaceShip);
-			}
-			else
-			{
-				camera.UnTrack();
-				camera.Move(mouseDelta);
-			}
-
-			camera.Update((float)dt);
-				
-
-			Keys[] keys = keyboard.GetPressedKeys();
-			foreach (Keys k in keys)
-			{
-				switch (k)
-				{
-					case Keys.W:
-						this.spaceShip.ThrustForward(3000.0f); break;
-					case Keys.A:
-						this.spaceShip.RotateLeft(12.0f); break;
-					case Keys.S:
-						this.spaceShip.ThrustBackward(3000.0f); break;
-					case Keys.D:
-						this.spaceShip.RotateRight(12.0f); break;
-
-					case Keys.Space:
-						spaceShip.Shoot(); break;
-					case Keys.Enter:
-						spaceShip.Reset(); break;
-
-					case Keys.O:
-						trackSpaceShip = true; break;
-					case Keys.P:
-						trackSpaceShip = false; break;
-					case Keys.M:
-						Mute(); break;
-
-					case Keys.F11:
-						graphics.ToggleFullScreen(); break;
-					case Keys.Escape:
-						this.Exit(); break;
-				}
-			}
-
+			camera.Update(dt);
 			spaceShip.Update(dt);
 
-			if (!camera.isVisible(spaceShip.BoundingBox))
+			//if (!camera.isVisible(spaceShip.BoundingBox))
 				//this.Exit();
 
 			base.Update(gameTime);
@@ -180,10 +157,9 @@ namespace WindowsGame1
 			double dt = gameTime.ElapsedGameTime.TotalSeconds;
 
 			graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
-			spriteBatch.Begin(0, BlendState.Opaque, null, null, null, flicker);
 
+			spriteBatch.Begin(0, BlendState.Opaque, null, null, null, moblur);
 			background.Draw(this.spriteBatch, camera);
-
 			spriteBatch.End();
 
 			spriteBatch.Begin();
@@ -197,9 +173,22 @@ namespace WindowsGame1
 			base.Draw(gameTime);
 		}
 
-		private void Mute()
+		private void ToggleMute()
+		{
+			if (!mute) Mute();
+			else UnMute();
+
+			mute = !mute;
+		}
+
+		public void Mute()
 		{
 			SoundEffect.MasterVolume = 0;
+		}
+
+		public void UnMute()
+		{
+			SoundEffect.MasterVolume = 0.15f;
 		}
 	}
 }

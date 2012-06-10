@@ -6,7 +6,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAUAAAAAAMAAAAAgAAAAACABQAAAAAAIQQAAAAAAAAA=</HashCode>
+      <HashCode>AAUAACAAAMgCAABgABAAACABAAABAAAIQAAEAAAEAAQ=</HashCode>
       <FileName>Camera.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -16,7 +16,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAQAEEAAAgAAAwAACAgAABAAAAAQAAgEAAAAAAAAIAQ=</HashCode>
+      <HashCode>AQQAEEAAAgAIAwAACIAAIBAAAAIQABgEAAAAAAAAIAQ=</HashCode>
       <FileName>Game1.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -28,7 +28,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="WindowsGame1.Graphics.Laser">
-    <Position X="3.5" Y="5" Width="1.75" />
+    <Position X="7.5" Y="6" Width="1.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Nested Types" Collapsed="false" />
@@ -59,7 +59,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAQACAAAAIpABgAAACAAgAABABAAAAAIAAAABAAEIAQ=</HashCode>
+      <HashCode>AAQACAAAAIpABgAAACAAgAABADAAAAAIAAAABAAEIAQ=</HashCode>
       <FileName>Graphics\SpaceShip.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -70,15 +70,33 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAgoAgAAAAAAAAAAAAAACAEAIAAAAAAAQ=</HashCode>
+      <HashCode>AAAAAAAAAAAAgoAgAAgAAAAAAAAAAACAEAIAAAAAAAQ=</HashCode>
       <FileName>Graphics\Sprite.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="WindowsGame1.PhysicsObject">
     <Position X="8.25" Y="2.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAgAAAAAAhAAAAAAABAAAAAAAAAEAEAACEAAA=</HashCode>
       <FileName>PhysicsObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WindowsGame1.Graphics.TiledSprite">
+    <Position X="3" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAYAAAAAA=</HashCode>
+      <FileName>Graphics\TiledSprite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WindowsGame1.Input.InputState">
+    <Position X="9.5" Y="6" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAQgAAAAAAAAIAAAAACAAIAAAAAAAAAABAIACAAQAAA=</HashCode>
+      <FileName>Input\InputState.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="WindowsGame1.Graphics.ITrackable">
@@ -89,7 +107,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="WindowsGame1.IDrawable">
-    <Position X="9" Y="6.25" Width="1.5" />
+    <Position X="5.75" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>IDrawable.cs</FileName>

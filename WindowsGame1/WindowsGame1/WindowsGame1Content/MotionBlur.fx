@@ -13,7 +13,7 @@ float4 PS_COLOR(float2 texCoord: TEXCOORD0) : COLOR
 	color += tex2D(texSampler, texCoord + vel * 0.004f);
 	color += tex2D(texSampler, texCoord - vel * 0.004f); 
 
-	color /= 4;
+	color /= 8;
    
    return color;
 }
