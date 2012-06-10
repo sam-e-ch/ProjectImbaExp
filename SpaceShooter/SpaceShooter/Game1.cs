@@ -25,7 +25,7 @@ namespace SpaceShooter
         MovingSprite player1;
         MovingSprite player2;
 
-        Sprite background;
+        Sprite background ;
 
         List<Laser> laserList1 = new List<Laser>();
         List<Laser> laserList2 = new List<Laser>();
