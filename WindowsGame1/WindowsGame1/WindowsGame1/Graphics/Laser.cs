@@ -61,9 +61,9 @@ namespace WindowsGame1.Graphics
 		{
 			if (watch.Elapsed.TotalMilliseconds >= 1000.0f / FireRate)
 			{
-				shots.Add(new LaserShot(ShotColor.Red, Heading - MathHelper.ToRadians(10.0f), spaceShip.Position));
+				shots.Add(new LaserShot(ShotColor.Red, Heading - MathHelper.ToRadians(8.0f), spaceShip.Position));
+				shots.Add(new LaserShot(ShotColor.Green, Heading + MathHelper.ToRadians(8.0f), spaceShip.Position));
 				shots.Add(new LaserShot(ShotColor.Blue, Heading, spaceShip.Position));
-				shots.Add(new LaserShot(ShotColor.Green, Heading + MathHelper.ToRadians(10.0f), spaceShip.Position));
 
 				laserSound.Play();
 

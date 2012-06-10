@@ -23,6 +23,8 @@ namespace WindowsGame1
 		SpriteBatch spriteBatch;
 		SpaceShip spaceShip;
 
+		float size; 
+
 		TiledSprite background;
 
 		Camera camera;
@@ -31,6 +33,8 @@ namespace WindowsGame1
 		SpriteFont calibri;
 		Vector2 oldMousePos;
 
+		Effect flicker;
+
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -38,12 +42,12 @@ namespace WindowsGame1
 
 			graphics.PreferredBackBufferWidth = 1280;
 			graphics.PreferredBackBufferHeight = 720;
-			graphics.SynchronizeWithVerticalRetrace = false;
-
+			graphics.SynchronizeWithVerticalRetrace = true;
 			graphics.ApplyChanges();
 
 			camera = new Camera(GraphicsDevice.Viewport.Bounds);
-			camera.Speed = 3.0f;
+			camera.Speed = 300.0f;
+			camera.Inertia = 0.4f;
 
 			this.IsFixedTimeStep = true;
 		}
@@ -79,6 +83,8 @@ namespace WindowsGame1
 			background.LoadContent(this.Content);
 			background.Size = 3.0f;
 
+			flicker = Content.Load<Effect>("MotionBlur");
+
 			calibri = Content.Load<SpriteFont>("calibri");
 		}
 
@@ -99,6 +105,9 @@ namespace WindowsGame1
 		protected override void Update(GameTime gameTime)
 		{
 			double dt = gameTime.ElapsedGameTime.TotalSeconds;
+			size += (float)gameTime.ElapsedGameTime.TotalSeconds;
+			//flicker.Parameters["size"].SetValue(size);
+			flicker.Parameters["vel"].SetValue(spaceShip.Velocity / 100.0f);
 
 			KeyboardState keyboard = Keyboard.GetState();
 			MouseState mouse = Mouse.GetState();
@@ -108,10 +117,18 @@ namespace WindowsGame1
 
 			oldMousePos = mousePos;
 
-			if (!trackSpaceShip)
-				camera.Move(mouseDelta);
-			else
+			if (trackSpaceShip)
+			{
 				camera.Track(spaceShip);
+			}
+			else
+			{
+				camera.UnTrack();
+				camera.Move(mouseDelta);
+			}
+
+			camera.Update((float)dt);
+				
 
 			Keys[] keys = keyboard.GetPressedKeys();
 			foreach (Keys k in keys)
@@ -146,7 +163,7 @@ namespace WindowsGame1
 				}
 			}
 
-			spaceShip.Update(gameTime.ElapsedGameTime.TotalSeconds);
+			spaceShip.Update(dt);
 
 			if (!camera.isVisible(spaceShip.BoundingBox))
 				//this.Exit();
@@ -163,9 +180,13 @@ namespace WindowsGame1
 			double dt = gameTime.ElapsedGameTime.TotalSeconds;
 
 			graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
-			spriteBatch.Begin();
+			spriteBatch.Begin(0, BlendState.Opaque, null, null, null, flicker);
 
 			background.Draw(this.spriteBatch, camera);
+
+			spriteBatch.End();
+
+			spriteBatch.Begin();
 			spaceShip.Draw(this.spriteBatch, camera);
 
 			spriteBatch.DrawString(calibri, String.Format("Lasers: {0}\nDrawTime: {1:0.0} ms\nSpeed: {2:000.0}, ASpeed: {3:000.0}", spaceShip.LaserCount, dt * 1000, spaceShip.Speed, spaceShip.AngularVelocity),

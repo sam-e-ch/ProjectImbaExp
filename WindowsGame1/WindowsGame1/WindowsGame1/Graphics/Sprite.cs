@@ -14,7 +14,7 @@ namespace WindowsGame1.Graphics
 		public Texture2D Texture {get; set;}
 		public float Rotation { get; set; }
 		public float Size { get; set; }
-        public string AssetName { get; set; }
+		public string AssetName { get; set; }
 		protected float layerDepth;
 
 		public static Vector2 texOffset(int width, int height, float sizeMultiplier)
@@ -25,10 +25,10 @@ namespace WindowsGame1.Graphics
 		public Sprite(string textureName)
 		{
 			Rotation = 0f;
-            Position = Vector2.Zero;
-            Size = 1.0f;
-            AssetName = textureName;
-            Texture = null;
+			Position = Vector2.Zero;
+			Size = 1.0f;
+			AssetName = textureName;
+			Texture = null;
 			layerDepth = 1.0f;
 		}
 
@@ -42,5 +42,5 @@ namespace WindowsGame1.Graphics
 			spriteBatch.Draw(this.Texture, Position - cam.Position, null, Color.White, Rotation,
 				-texOffset(this.Texture.Width, this.Texture.Height, Size), Size, SpriteEffects.None, layerDepth);
 		}
-    }
+	}
 }
