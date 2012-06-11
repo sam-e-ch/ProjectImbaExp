@@ -11,6 +11,7 @@ namespace WindowsGame1
 	{
 		public float Speed { get; set; }
 		public float Inertia { get; set; }
+		public float Friction { get; set; }
 
 		public Vector2 Position { get; private set; }
 
@@ -76,27 +77,25 @@ namespace WindowsGame1
 			if (track)
 			{
 				Vector2 targetOffset = toTrack.Position - oldTarget;
-				this.Velocity = targetOffset / Inertia;
-			}
-			else
-			{
-				this.Velocity += this.Acceleration * (float)dt;				
+				Vector2 offsetVelocity = targetOffset - (oldTarget - oldOldTarget);
+				this.Acceleration = targetOffset / Inertia + Friction * offsetVelocity;
 			}
 
+			this.Velocity += this.Acceleration * (float)dt;
 			this.Target += this.Velocity * (float)dt;
 
 			this.Position = this.Target - new Vector2(this.View.Width / 2, this.View.Height / 2);
 			this.View = new Rectangle((int)Position.X, (int)Position.Y, this.View.Width, this.View.Height);
 
 			this.oldOldTarget = oldTarget;
-			this.oldTarget = Target;			
-			
+			this.oldTarget = Target;
+
 			//this.Acceleration = Vector2.Zero;
 		}
 
 		public bool isVisible(Rectangle r)
 		{
 			return r.Intersects(this.View);
-		}		
+		}
 	}
 }

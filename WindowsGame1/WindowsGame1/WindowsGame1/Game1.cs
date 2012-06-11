@@ -46,7 +46,7 @@ namespace WindowsGame1
 			graphics.SynchronizeWithVerticalRetrace = false;
 			graphics.ApplyChanges();
 
-			this.IsFixedTimeStep = false;
+			this.IsFixedTimeStep = true;
 
 			Content.RootDirectory = "Content";
 
@@ -70,7 +70,8 @@ namespace WindowsGame1
 			background.Size = 3.0f;
 
 			camera.Speed = 200.0f;
-			camera.Inertia = 0.4f;
+			camera.Inertia = 20.0f;
+			camera.Friction = 100f;
 			camera.Track(spaceShip);
 
 			SoundEffect.MasterVolume = 0.15f;
@@ -136,7 +137,7 @@ namespace WindowsGame1
 			if (!track) camera.Move(input.getMouseOffset());
 
 			//size += (float)gameTime.ElapsedGameTime.TotalSeconds;
-			//flicker.Parameters["size"].SetValue(size);
+			//moblur.Parameters["size"].SetValue(size);
 			moblur.Parameters["vel"].SetValue(camera.Velocity / 1000.0f * (float)Math.Pow(2, camera.Velocity.Length() / 400.0f));
 
 			camera.Update(dt);
