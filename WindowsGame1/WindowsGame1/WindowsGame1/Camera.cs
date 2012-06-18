@@ -76,6 +76,7 @@ namespace WindowsGame1
 		{
 			if (track)
 			{
+				//this.Target = toTrack.Position - Friction * toTrack.Acceleration;
 				Vector2 targetOffset = toTrack.Position - oldTarget;
 				Vector2 offsetVelocity = targetOffset - (oldTarget - oldOldTarget);
 				this.Acceleration = targetOffset / Inertia + Friction * offsetVelocity;

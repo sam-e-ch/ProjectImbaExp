@@ -9,5 +9,6 @@ namespace WindowsGame1.Graphics
 	public interface ITrackable
 	{
 		Vector2 Position { get; }
+		Vector2 Acceleration { get; }
 	}
 }

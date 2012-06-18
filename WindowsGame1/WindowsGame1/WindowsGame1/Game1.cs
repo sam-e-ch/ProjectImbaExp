@@ -70,8 +70,8 @@ namespace WindowsGame1
 			background.Size = 3.0f;
 
 			camera.Speed = 200.0f;
-			camera.Inertia = 20.0f;
-			camera.Friction = 100f;
+			camera.Inertia = 1000f;
+			camera.Friction = 5000f;
 			camera.Track(spaceShip);
 
 			SoundEffect.MasterVolume = 0.15f;
