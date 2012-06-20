@@ -110,7 +110,7 @@ namespace WindowsGame1.Graphics
 
 			public void Draw(SpriteBatch sp, Camera cam, Texture2D tex)
 			{
-				sp.Draw(tex, Position - cam.Position,
+				sp.Draw(tex, Position,
 				 null, Microsoft.Xna.Framework.Color.White, (float)this.Rotation, -Sprite.texOffset(tex.Width, tex.Height, 1.0f),
 				  1.0f, SpriteEffects.None, 0);
 			}

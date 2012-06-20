@@ -43,7 +43,7 @@ namespace WindowsGame1
 
 			graphics.PreferredBackBufferWidth = 1280;
 			graphics.PreferredBackBufferHeight = 720;
-			graphics.SynchronizeWithVerticalRetrace = false;
+			graphics.SynchronizeWithVerticalRetrace = true;
 			graphics.ApplyChanges();
 
 			this.IsFixedTimeStep = true;
@@ -70,8 +70,8 @@ namespace WindowsGame1
 			background.Size = 3.0f;
 
 			camera.Speed = 200.0f;
-			camera.Inertia = 1000f;
-			camera.Friction = 5000f;
+			camera.Inertia = 0.5f;
+			camera.Zoom = 1.0f;
 			camera.Track(spaceShip);
 
 			SoundEffect.MasterVolume = 0.15f;
@@ -140,6 +140,11 @@ namespace WindowsGame1
 			//moblur.Parameters["size"].SetValue(size);
 			moblur.Parameters["vel"].SetValue(camera.Velocity / 1000.0f * (float)Math.Pow(2, camera.Velocity.Length() / 400.0f));
 
+			int val;
+			if (input.getWheelOffset(out val))
+				camera.Zoom += val / 2000.0f;
+			if (input.isWheelClicked()) camera.Zoom = 1.0f;
+
 			camera.Update(dt);
 			spaceShip.Update(dt);
 
@@ -159,13 +164,15 @@ namespace WindowsGame1
 
 			graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			spriteBatch.Begin(0, BlendState.Opaque, null, null, null, moblur);
+			spriteBatch.Begin(0, BlendState.Opaque, null, null, null, moblur, camera.Transform);
 			background.Draw(this.spriteBatch, camera);
 			spriteBatch.End();
 
-			spriteBatch.Begin();
+			spriteBatch.Begin(0, null, null, null, null, null, camera.Transform);
 			spaceShip.Draw(this.spriteBatch, camera);
+			spriteBatch.End();
 
+			spriteBatch.Begin();
 			spriteBatch.DrawString(calibri, String.Format("Lasers: {0}\nDrawTime: {1:0.0} ms\nSpeed: {2:000.0}, ASpeed: {3:000.0}", spaceShip.LaserCount, dt * 1000, spaceShip.Speed, spaceShip.AngularVelocity),
 				new Vector2(10, 10), Color.LightGreen, 0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
 

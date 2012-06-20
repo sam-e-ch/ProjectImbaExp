@@ -26,7 +26,7 @@ namespace WindowsGame1.Graphics
                 {
                     Vector2 pos = Position + new Vector2(x * Texture.Width, y * Texture.Height) * Size;
 
-                    spriteBatch.Draw(this.Texture, pos - cam.Position, null, Color.White, Rotation,
+                    spriteBatch.Draw(this.Texture, pos, null, Color.White, Rotation,
                         -texOffset(this.Texture.Width, this.Texture.Height, Size), Size, SpriteEffects.None, layerDepth);
                 }           
             }                

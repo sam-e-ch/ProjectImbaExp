@@ -11,7 +11,8 @@ namespace WindowsGame1
 	{
 		public float Speed { get; set; }
 		public float Inertia { get; set; }
-		public float Friction { get; set; }
+
+		public Matrix Transform { get; private set; }
 
 		public Vector2 Position { get; private set; }
 
@@ -19,9 +20,10 @@ namespace WindowsGame1
 		public Vector2 Acceleration { get; private set; }
 
 		public Rectangle View { get; private set; }
+		public float Zoom { get; set; }
 
 		public Vector2 Target { get; set; }
-		private Vector2 oldTarget, oldOldTarget;
+		private Vector2 oldTarget;
 
 		private bool track;
 		ITrackable toTrack;
@@ -56,7 +58,6 @@ namespace WindowsGame1
 
 		public void Move(Vector2 offset)
 		{
-			//this.Target += Speed * offset;
 			this.Velocity = Speed * offset;
 		}
 
@@ -76,22 +77,21 @@ namespace WindowsGame1
 		{
 			if (track)
 			{
-				//this.Target = toTrack.Position - Friction * toTrack.Acceleration;
-				Vector2 targetOffset = toTrack.Position - oldTarget;
-				Vector2 offsetVelocity = targetOffset - (oldTarget - oldOldTarget);
-				this.Acceleration = targetOffset / Inertia + Friction * offsetVelocity;
+				Vector2 targetOffset = toTrack.Position - oldTarget;				
+				this.Velocity = targetOffset / Inertia;
 			}
 
-			this.Velocity += this.Acceleration * (float)dt;
+			//this.Velocity += this.Acceleration * (float)dt;
+			
 			this.Target += this.Velocity * (float)dt;
 
 			this.Position = this.Target - new Vector2(this.View.Width / 2, this.View.Height / 2);
 			this.View = new Rectangle((int)Position.X, (int)Position.Y, this.View.Width, this.View.Height);
 
-			this.oldOldTarget = oldTarget;
 			this.oldTarget = Target;
 
-			//this.Acceleration = Vector2.Zero;
+			this.Transform = Matrix.CreateTranslation(new Vector3(-this.Position, 0.0f)) * Matrix.CreateTranslation(new Vector3(-this.Target, 0.0f))
+				* Matrix.CreateScale(new Vector3(Zoom, Zoom, 1.0f)) * Matrix.CreateTranslation(new Vector3(this.Target, 0.0f));
 		}
 
 		public bool isVisible(Rectangle r)

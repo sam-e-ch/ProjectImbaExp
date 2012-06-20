@@ -39,7 +39,7 @@ namespace WindowsGame1.Graphics
 
 		public virtual void Draw(SpriteBatch spriteBatch, Camera cam)
 		{
-			spriteBatch.Draw(this.Texture, Position - cam.Position, null, Color.White, Rotation,
+			spriteBatch.Draw(this.Texture, Position, null, Color.White, Rotation,
 				-texOffset(this.Texture.Width, this.Texture.Height, Size), Size, SpriteEffects.None, layerDepth);
 		}
 	}

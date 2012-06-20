@@ -40,5 +40,16 @@ namespace WindowsGame1.Input
 		{
 			return getMousePosition() - new Vector2(prevMouseState.X, prevMouseState.Y);
 		}
+
+		public bool getWheelOffset(out int value)
+		{
+			value = currentMouseState.ScrollWheelValue - prevMouseState.ScrollWheelValue;
+			return value != 0;
+		}
+
+		public bool isWheelClicked()
+		{
+			return this.currentMouseState.MiddleButton == ButtonState.Pressed;
+		}
 	}	
 }
