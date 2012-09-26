@@ -13,7 +13,7 @@ namespace FarseerTest.Graphics
     {
         public Body body;
         public Vector2 Size { get; private set; }
-        private float maxSpeed = 5f;
+        public float maxSpeed{get;set;}
 
         public PhysicsSprite(Body _body, String textureName, Color _color, Vector2 size)
             : base(textureName, _color)
@@ -22,6 +22,7 @@ namespace FarseerTest.Graphics
             Rotation = body.Rotation;
             Position = ConvertUnits.ToDisplayUnits(body.Position);
             this.Size = size;
+            this.maxSpeed = 3f;
         }
 
         public void Update()
