@@ -28,6 +28,7 @@ namespace FarseerTest
 
         private bool debugViewFlag = false;
         private int debugSwitchCooldown = 30;
+        int fps;
 
         Vector2 gravity = new Vector2(0f, 9.81f);
         static int bodyCount = 2;
@@ -40,6 +41,7 @@ namespace FarseerTest
         PhysicsSprite[] sprites = new PhysicsSprite[bodyCount];
         List<PhysicsSprite> level = new List<PhysicsSprite>();
         Body[,] jumpSensor = new Body[bodyCount, 3];
+        Body b;
 
         bool[] bodyHasContact = new bool[bodyCount];
         private float[] jumpingSpeed = new float[bodyCount];
@@ -49,6 +51,7 @@ namespace FarseerTest
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.IsFixedTimeStep = true;
         }
 
         /// <summary>
@@ -61,7 +64,6 @@ namespace FarseerTest
         {
             input = new KeyboardState();
             world = new World(gravity);
-
 
             InitializeCharacters();
             InitializeLevel();
@@ -96,6 +98,59 @@ namespace FarseerTest
             floor = BodyFactory.CreateRectangle(world, size.X, size.Y, 1f);
             floor.Position = new Vector2(ConvertUnits.ToSimUnits(GraphicsDevice.Viewport.Width), size.Y / 2);
             level.Add(new PhysicsSprite(floor, "Graphics/squares", Color.Green, ConvertUnits.ToDisplayUnits(size)));
+
+            size = ConvertUnits.ToSimUnits(new Vector2(50, 5));
+            Body temp =BodyFactory.CreateRectangle(world, size.X, size.Y,10f);
+            Vector2 pos =ConvertUnits.ToSimUnits(new Vector2(300,430));
+            temp.Position = pos;
+            temp.BodyType = BodyType.Dynamic;
+
+            FixedRevoluteJoint tempJoin = JointFactory.CreateFixedRevoluteJoint(world, temp, temp.LocalCenter, temp.WorldCenter);
+            tempJoin.MotorSpeed = 10f;
+            tempJoin.MaxMotorTorque = 1000f;
+            tempJoin.MotorEnabled = true;
+
+            level.Add(new PhysicsSprite(temp, "Graphics/squares", Color.Green, ConvertUnits.ToDisplayUnits(size)));
+
+            size = ConvertUnits.ToSimUnits(new Vector2(5, 50));
+            Body temp2 = BodyFactory.CreateRectangle(world, size.X, size.Y, 10f);
+            pos = ConvertUnits.ToSimUnits(new Vector2(300, 430));
+            temp2.Position = pos;
+            temp2.BodyType = BodyType.Dynamic;
+            temp2.IgnoreGravity = true;
+
+            AngleJoint aj = JointFactory.CreateAngleJoint(world, temp, temp2);
+            aj.TargetAngle = 0;
+            FixedDistanceJoint dj = JointFactory.CreateFixedDistanceJoint(world, temp2, temp2.LocalCenter, temp2.WorldCenter);
+            dj.Length = 0;
+
+            level.Add(new PhysicsSprite(temp, "Graphics/squares", Color.Green, ConvertUnits.ToDisplayUnits(size)));
+
+            size = ConvertUnits.ToSimUnits(new Vector2(50, 5));
+            Body temp3 = BodyFactory.CreateRectangle(world, size.X, size.Y, 10f);
+            pos = ConvertUnits.ToSimUnits(new Vector2(340, 430));
+            temp3.Position = pos;
+            temp3.BodyType = BodyType.Dynamic;
+
+            FixedRevoluteJoint tempJoin3 = JointFactory.CreateFixedRevoluteJoint(world, temp3, temp3.LocalCenter, temp3.WorldCenter);
+            tempJoin3.MotorSpeed = -10f;
+            tempJoin3.MaxMotorTorque = 1000f;
+            tempJoin3.MotorEnabled = true;
+
+            level.Add(new PhysicsSprite(temp3, "Graphics/squares", Color.Green, ConvertUnits.ToDisplayUnits(size)));
+
+            size = ConvertUnits.ToSimUnits(new Vector2(5, 50));
+            Body temp4 = BodyFactory.CreateRectangle(world, size.X, size.Y, 10f);
+            temp4.Position = pos;
+            temp4.BodyType = BodyType.Dynamic;
+            temp4.IgnoreGravity = true;
+
+            AngleJoint aj2 = JointFactory.CreateAngleJoint(world, temp3, temp4);
+            aj2.TargetAngle = 0;
+            FixedDistanceJoint dj2 = JointFactory.CreateFixedDistanceJoint(world, temp4, temp4.LocalCenter, temp4.WorldCenter);
+            dj2.Length = 0;
+
+            level.Add(new PhysicsSprite(temp4, "Graphics/squares", Color.Green, ConvertUnits.ToDisplayUnits(size)));
         }
 
         private void InitializeCharacters()
@@ -104,12 +159,12 @@ namespace FarseerTest
             Vector2 position = new Vector2();
             Keys[] keys;
 
-            size = new Vector2(30f, 30f);
+            size = new Vector2(10f, 10f);
             position = new Vector2(ConvertUnits.ToSimUnits(100), ConvertUnits.ToSimUnits(300));
             keys = new Keys[3] { Keys.A, Keys.D, Keys.W };
             CreateCharacter(0, size, position, Color.Blue, "squares", keys);
 
-            size = new Vector2(30f, 30f);
+            size = new Vector2(10f, 10f);
             position = new Vector2(ConvertUnits.ToSimUnits(500), ConvertUnits.ToSimUnits(300));
             keys = new Keys[3] { Keys.Left, Keys.Right, Keys.Up };
             CreateCharacter(1, size, position, Color.Red, "squares", keys);
@@ -124,7 +179,7 @@ namespace FarseerTest
                 bodys[player] = BodyFactory.CreateRectangle(world, convertedSize.X, convertedSize.Y, 13f, position);
                 bodys[player].BodyType = BodyType.Dynamic;
                 bodys[player].Friction = 1f;
-                bodys[player].FixedRotation = true;
+                bodys[player].FixedRotation = false;
 
                 jumpingSpeed[player] = 0;
                 bodyHasContact[player] = false;
@@ -137,7 +192,7 @@ namespace FarseerTest
                 }
 
                 speed[player] = 1f;
-                jumpHeight[player] = 4f;                
+                jumpHeight[player] = bodys[player].Mass*4;                
                 maxSpeed[player] = 3f;
 
                 sprites[player] = new PhysicsSprite(bodys[player], "Graphics/" + texture, color, size);
@@ -167,7 +222,7 @@ namespace FarseerTest
 
         }
 
-        private bool bottomCollision(Vector2 dir)
+        private bool BottomCollision(Vector2 dir)
         {
             if (Math.Abs(dir.X) < Math.Abs(dir.Y))
             {
@@ -180,7 +235,7 @@ namespace FarseerTest
             return false;
         }
 
-        private Vector2 getContactNormal(Contact contact)
+        private Vector2 GetContactNormal(Contact contact)
         {
             Vector2 normal = new Vector2();
             FixedArray2<Vector2> points = new FixedArray2<Vector2>();
@@ -194,10 +249,13 @@ namespace FarseerTest
             
             for (int i = 0; i < bodyCount; i++)
             {
-                if (fix1.Body == bodys[i] && bottomCollision(getContactNormal(contact)))
+                if (fix1.Body == bodys[i])
                 {
-                    bodyHasContact[i] = true;
-                    break;
+                    if (BottomCollision(GetContactNormal(contact)))
+                    {
+                        bodyHasContact[i] = true;
+                        break;
+                    }                    
                 }
             }
             return true;
@@ -214,17 +272,18 @@ namespace FarseerTest
 
                     while (tempEdge!=null)
                     {
-                        if (tempEdge.Contact.IsTouching() && bottomCollision(getContactNormal(tempEdge.Contact)))
+                        if (tempEdge.Contact.IsTouching() && BottomCollision(GetContactNormal(tempEdge.Contact)))
                         {
                             bodyHasContact[i] = true;
                             break;
                         }
+                        
                         tempEdge = tempEdge.Next;
                     }
-                    if (bodyHasContact[i])
+                    /*if (bodyHasContact[i])
                     {
                         break;
-                    }                    
+                    }   */                 
                 }
             }
         } 
@@ -237,11 +296,14 @@ namespace FarseerTest
        
         protected override void Update(GameTime gameTime)
         {
-            world.Step(0.0166666f);
+            fps = (int)(1 / gameTime.ElapsedGameTime.TotalSeconds);
+
+            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             input = Keyboard.GetState();
             debugSwitchCooldown--;
 
+         
             HandlePlayers();
 
             if (input.IsKeyDown(Keys.Escape))
@@ -260,9 +322,17 @@ namespace FarseerTest
                 sprites[i].Update();
             }
 
+            foreach (PhysicsSprite p in level)
+            {
+                p.Update();
+            }
+
+            
+
             base.Update(gameTime);
         }
 
+       
         private void HandlePlayers()
         {
             for (int player = 0; player < bodyCount; player++)
@@ -296,7 +366,10 @@ namespace FarseerTest
                     bodys[player].ApplyLinearImpulse(new Vector2(0f, -jumpHeight[player]));
                     jumpingSpeed[player] = bodys[player].LinearVelocity.X;
                 }
-            }
+
+                  
+                }
+            
         }
      
         protected override void Draw(GameTime gameTime)
@@ -315,7 +388,7 @@ namespace FarseerTest
                  1f);
                 debugView.RenderDebugData(ref projection);
 
-                spriteBatch.DrawString(calibri, ("Contact P1 " + bodyHasContact[0] + "\nContact P2 " + bodyHasContact[1]), new Vector2(10, 5), Color.Yellow,
+                spriteBatch.DrawString(calibri, ("FPS " + fps ), new Vector2(10, 5), Color.Yellow,
                 0f, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             }
             else
