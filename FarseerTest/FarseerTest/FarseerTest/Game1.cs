@@ -40,11 +40,10 @@ namespace FarseerTest
         PhysicsSprite[] sprites = new PhysicsSprite[bodyCount];
         List<PhysicsSprite> level = new List<PhysicsSprite>();
         Body[,] jumpSensor = new Body[bodyCount, 3];
-        Color[] playerColor = new Color[bodyCount];
 
         bool[] bodyHasContact = new bool[bodyCount];
         private float[] jumpingSpeed = new float[bodyCount];
-        private Keys[,] controls;
+        private Keys[,] controls = new Keys[bodyCount,3];
 
         public Game1()
         {
@@ -61,53 +60,10 @@ namespace FarseerTest
         protected override void Initialize()
         {
             input = new KeyboardState();
-            // TODO: Add your initialization logic here
             world = new World(gravity);
 
-            Vector2[] size = new Vector2[bodyCount];
-            Vector2[] convertedSize = new Vector2[bodyCount];
-            Vector2[] position = new Vector2[bodyCount];
 
-            int player = 0;
-
-            size[player] = new Vector2(30f, 30f);
-            convertedSize[player] = ConvertUnits.ToSimUnits(size[player]);
-            position[player] = new Vector2(ConvertUnits.ToSimUnits(100), ConvertUnits.ToSimUnits(300));
-
-            bodys[player] = BodyFactory.CreateRectangle(world, convertedSize[player].X, convertedSize[player].Y, 13f, position[player]);
-            bodys[player].BodyType = BodyType.Dynamic;
-            bodys[player].Friction = 1f;
-            bodys[player].FixedRotation = true;
-
-            playerColor[player] = Color.Blue;
-
-            player = 1;
-
-            size[player] = new Vector2(30f, 30f);
-            convertedSize[player] = ConvertUnits.ToSimUnits(size[player]);
-            position[player] = new Vector2(ConvertUnits.ToSimUnits(500), ConvertUnits.ToSimUnits(300));
-
-            bodys[player] = BodyFactory.CreateRectangle(world, convertedSize[player].X, convertedSize[player].Y, 13f, position[player]);
-            bodys[player].BodyType = BodyType.Dynamic;
-            bodys[player].Friction = 1f;
-            bodys[player].FixedRotation = true;
-
-            playerColor[player] = Color.Red;
-
-            controls= new Keys[,]{{Keys.A, Keys.D, Keys.W},{Keys.Left, Keys.Right, Keys.Up}};
-
-            for (int i = 0; i < bodyCount; i++)
-            {
-                bodyHasContact[i] = false;
-                speed[i] = 1f;
-                jumpHeight[i] = 4f;
-                jumpingSpeed[i] = 0;
-                maxSpeed[i] = 3f;
-                bodys[i].OnCollision += OnCollision;
-                bodys[i].OnSeparation += OnSeperation;
-                sprites[i] = new PhysicsSprite(bodys[i], "Graphics/squares", playerColor[i], size[i]);
-            }
-
+            InitializeCharacters();
             InitializeLevel();
 
             base.Initialize();
@@ -141,6 +97,54 @@ namespace FarseerTest
             floor.Position = new Vector2(ConvertUnits.ToSimUnits(GraphicsDevice.Viewport.Width), size.Y / 2);
             level.Add(new PhysicsSprite(floor, "Graphics/squares", Color.Green, ConvertUnits.ToDisplayUnits(size)));
         }
+
+        private void InitializeCharacters()
+        {
+            Vector2 size = new Vector2();
+            Vector2 position = new Vector2();
+            Keys[] keys;
+
+            size = new Vector2(30f, 30f);
+            position = new Vector2(ConvertUnits.ToSimUnits(100), ConvertUnits.ToSimUnits(300));
+            keys = new Keys[3] { Keys.A, Keys.D, Keys.W };
+            CreateCharacter(0, size, position, Color.Blue, "squares", keys);
+
+            size = new Vector2(30f, 30f);
+            position = new Vector2(ConvertUnits.ToSimUnits(500), ConvertUnits.ToSimUnits(300));
+            keys = new Keys[3] { Keys.Left, Keys.Right, Keys.Up };
+            CreateCharacter(1, size, position, Color.Red, "squares", keys);
+        }
+
+        private void CreateCharacter(int player, Vector2 size, Vector2 position, Color color, String texture, Keys[] keys)
+        {
+            if (player < bodyCount)
+            {
+                Vector2 convertedSize = ConvertUnits.ToSimUnits(size);
+
+                bodys[player] = BodyFactory.CreateRectangle(world, convertedSize.X, convertedSize.Y, 13f, position);
+                bodys[player].BodyType = BodyType.Dynamic;
+                bodys[player].Friction = 1f;
+                bodys[player].FixedRotation = true;
+
+                jumpingSpeed[player] = 0;
+                bodyHasContact[player] = false;
+                bodys[player].OnCollision += OnCollision;
+                bodys[player].OnSeparation += OnSeperation;
+
+                for (int i = 0; i < 3; i++)
+                {
+                    controls[player,i] = keys[i];
+                }
+
+                speed[player] = 1f;
+                jumpHeight[player] = 4f;                
+                maxSpeed[player] = 3f;
+
+                sprites[player] = new PhysicsSprite(bodys[player], "Graphics/" + texture, color, size);
+            }
+        }
+
+       
         
         protected override void LoadContent()
         {
